@@ -13,7 +13,7 @@ COPY package.json bun.lock ./
 COPY prisma ./prisma/
 
 # Instalar dependencias de producción
-RUN bun install --frozen-lockfile
+RUN bun install
 
 # Generar el cliente Prisma optimizado para el entorno contenedor
 RUN bunx prisma generate
