@@ -13,6 +13,11 @@ const { doctorando, expediente } = Astro.props;
 const nombreCompleto = doctorando.nombreCompleto || `${doctorando.nombres} ${doctorando.apellidos}`.trim();
 const iniciales = `${doctorando.nombres?.charAt(0) || ''}${doctorando.apellidos?.charAt(0) || ''}`.toUpperCase() || 'UD';
 const estado = getEstadoBadge(expediente?.estado);
+// Algunos programas ya se llaman "Doctorado en ...": no se repite la palabra
+const yaEsDoctorado = (nombre: string) => nombre.trim().toLowerCase().startsWith('doctorado');
+const programaTexto = !expediente?.programa
+  ? NO_REGISTRADO
+  : yaEsDoctorado(expediente.programa) ? expediente.programa : `Doctorado en ${expediente.programa}`;
 const datos = [
   { label: 'Cédula', value: doctorando.cedula },
   { label: 'Carpeta', value: doctorando.carpeta || NO_REGISTRADO },
@@ -33,7 +38,7 @@ const datos = [
         </span>
       </div>
       <p class="mt-1 text-sm text-text-body">
-        {expediente?.programa ? `Doctorado en ${expediente.programa}` : NO_REGISTRADO}
+        {programaTexto}
         {expediente?.institucionDestino && <span class="text-muted"> — {expediente.institucionDestino.nombre}</span>}
       </p>
     </div>

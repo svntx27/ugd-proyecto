@@ -28,7 +28,8 @@ const filas = hitos.map((hito, i) => {
   return {
     hito,
     rango,
-    nota: [hito.detalle, duracion].filter(Boolean).join(' · '),
+    // Si la duración calculada dice lo mismo que lo registrado ("6 meses"), no se repite
+    nota: [hito.detalle, duracion && !hito.detalle?.includes(duracion) ? duracion : null].filter(Boolean).join(' · '),
     ultimo: i === hitos.length - 1,
     destacado: hito.tipo === 'graduacion' || hito.tipo === 'devengamiento',
     estado: ESTADOS[hito.estado],

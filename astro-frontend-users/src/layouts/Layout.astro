@@ -46,7 +46,7 @@ try {
   <body class="min-h-screen bg-surface flex flex-col font-sans text-text-main selection:bg-primary selection:text-primary-foreground">
     <ToastProvider client:idle />
     
-    {showNavbar && <Navbar initialUser={initialUser} client:load />}
+    {showNavbar && <Navbar initialUser={initialUser} currentPath={Astro.url.pathname} client:load />}
     
     <main class={showNavbar ? "flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8" : "flex-grow flex flex-col"}>
       <slot />

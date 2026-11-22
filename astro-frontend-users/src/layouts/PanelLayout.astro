@@ -3,10 +3,27 @@
  * Layout del panel del doctorando: aviso institucional, menú lateral y área de contenido.
  * Todo se renderiza en el servidor; el menú son enlaces normales (sin JavaScript).
  */
-import { AlertCircle } from 'lucide-react';
+import {
+  AlertCircle,
+  LayoutDashboard,
+  User as UserIcon,
+  GraduationCap,
+  FileSignature,
+  Calendar,
+  CalendarPlus,
+} from 'lucide-react';
 import Layout from './Layout.astro';
-import { MENU_PANEL, etiquetaSeccion, type SeccionPanel } from '../lib/panel-nav';
+import { MENU_PANEL, type SeccionPanel } from '../lib/panel-nav';
 import { fetchCitas, fetchPerfil, fetchRepresentantes, fetchSettings, type SettingsMap } from '../lib/server-api';
+
+const ICONOS_MENU: Record<SeccionPanel, any> = {
+  resumen: LayoutDashboard,
+  datos: UserIcon,
+  formacion: GraduationCap,
+  contrato: FileSignature,
+  citas: Calendar,
+  agendar: CalendarPlus,
+};
 
 interface Props {
   title: string;
@@ -41,36 +58,6 @@ const bannerMensaje = settings?.global_message || settings?.communication_banner
       )
     }
 
-    <!-- Menú en celular: desplegable nativo, sin JavaScript -->
-    <details class="lg:hidden group rounded-lg border border-border bg-surface">
-      <summary class="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm">
-        <span><span class="text-muted">Sección:</span> <span class="font-medium text-primary">{etiquetaSeccion(seccion)}</span></span>
-        <span aria-hidden="true" class="text-muted transition-transform group-open:rotate-180">▾</span>
-      </summary>
-      <nav aria-label="Secciones del panel" class="border-t border-border-subtle py-2">
-        {
-          MENU_PANEL.map((g) => (
-            <div class="py-1">
-              <p class="px-4 pt-2 pb-1 text-[11px] font-medium uppercase tracking-wide text-muted">{g.grupo}</p>
-              {g.items.map((item) => (
-                <a
-                  href={item.href}
-                  data-astro-prefetch="load"
-                  aria-current={item.id === seccion ? 'page' : undefined}
-                  class:list={[
-                    'block px-4 py-2 text-sm border-l-2',
-                    item.id === seccion ? 'border-gold bg-gold-light/60 font-medium text-primary' : 'border-transparent text-text-body hover:text-primary',
-                  ]}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </div>
-          ))
-        }
-      </nav>
-    </details>
-
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       <aside class="hidden lg:block lg:col-span-3 sticky top-28 pr-6 border-r border-border-subtle">
         <nav aria-label="Secciones del panel" class="space-y-7">
@@ -79,23 +66,36 @@ const bannerMensaje = settings?.global_message || settings?.communication_banner
               <div>
                 <p class="pb-3 mb-2 border-b border-border-subtle text-[11px] font-semibold uppercase tracking-widest text-muted">{g.grupo}</p>
                 <ul class="space-y-0.5">
-                  {g.items.map((item) => (
-                    <li>
-                      <a
-                        href={item.href}
-                        data-astro-prefetch="load"
-                        aria-current={item.id === seccion ? 'page' : undefined}
-                        class:list={[
-                          'block py-2 px-3 text-sm border-l-2 transition-colors',
-                          item.id === seccion
-                            ? 'border-gold bg-gold-light/60 font-medium text-primary'
-                            : 'border-transparent text-text-body hover:text-primary hover:bg-surface-subtle',
-                        ]}
-                      >
-                        {item.label}
-                      </a>
-                    </li>
-                  ))}
+                  {g.items.map((item) => {
+                    const Icono = ICONOS_MENU[item.id];
+                    const esActivo = item.id === seccion;
+                    return (
+                      <li>
+                        <a
+                          href={item.href}
+                          data-astro-prefetch="load"
+                          aria-current={esActivo ? 'page' : undefined}
+                          class:list={[
+                            'group flex items-center gap-2.5 py-2 px-3 text-sm rounded-r-lg border-l-2 transition-all duration-150',
+                            esActivo
+                              ? 'border-gold bg-gold-light/60 font-semibold text-primary'
+                              : 'border-transparent text-text-body hover:text-primary hover:bg-surface-subtle',
+                          ]}
+                        >
+                          {Icono && (
+                            <Icono
+                              className={
+                                esActivo
+                                  ? 'w-4 h-4 shrink-0 text-gold-text'
+                                  : 'w-4 h-4 shrink-0 text-muted group-hover:text-primary transition-colors'
+                              }
+                            />
+                          )}
+                          <span>{item.label}</span>
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             ))

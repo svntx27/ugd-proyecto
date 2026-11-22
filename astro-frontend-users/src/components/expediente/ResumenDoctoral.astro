@@ -58,23 +58,21 @@ const indicadores = [
     }
   </section>
 
-  <div class="grid grid-cols-1 xl:grid-cols-5 gap-6">
-    <Card class="xl:col-span-3">
-      <SectionHeading title="Trayectoria del contrato" subtitle="Contrato, adendas, graduación y devengamiento registrados por la UGD." />
-      <TrayectoriaTimeline hitos={hitos} />
-    </Card>
-    <div class="xl:col-span-2 space-y-6">
-      <DevengamientoCard resumen={devengamiento} devengamiento={expediente?.devengamiento ?? null} />
-      <ConvenioCard expediente={expediente} />
-    </div>
-  </div>
+  <!-- Cada columna se apila por su cuenta (items-start): ninguna tarjeta se estira y no queda espacio
+       en blanco, sin importar cuántas adendas tenga el expediente. -->
+  <div class="grid grid-cols-1 xl:grid-cols-5 gap-6 items-start">
+    <div class="xl:col-span-3 space-y-6">
+      <Card>
+        <SectionHeading title="Trayectoria del contrato" subtitle="Contrato, adendas, graduación y devengamiento registrados por la UGD." />
+        <TrayectoriaTimeline hitos={hitos} />
+      </Card>
 
-  <Card>
+      <Card>
     <SectionHeading title="Proyecto de investigación" />
     <p class="font-serif text-lg text-text-main leading-relaxed">
       {expediente?.tituloInvestigacion || <span class="font-sans text-sm text-muted">{NO_REGISTRADO}</span>}
     </p>
-    <div class="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="mt-5 grid grid-cols-2 gap-5">
       <DataField label="Facultad" value={doctorando.facultad} />
       <DataField label="Carrera" value={doctorando.carrera} />
       <DataField label="Oficio de registro" value={expediente?.oficioRegistroProyecto} />
@@ -95,7 +93,14 @@ const indicadores = [
         )
       }
     </p>
-  </Card>
+      </Card>
+    </div>
+
+    <div class="xl:col-span-2 space-y-6">
+      <DevengamientoCard resumen={devengamiento} devengamiento={expediente?.devengamiento ?? null} />
+      <ConvenioCard expediente={expediente} />
+    </div>
+  </div>
 
   {
     expediente?.observaciones && (

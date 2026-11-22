@@ -3,12 +3,13 @@ import { toast } from '../lib/toast';
 import api from '../lib/api';
 import type { Representative, AvailabilitySlot } from '../types';
 import { Button } from './ui/Button';
-import { Input } from './ui/Input';
 import { ArrowLeft, Clock, CheckCircle2, UserCheck, AlertCircle } from 'lucide-react';
 import { SettingsService } from '../lib/settings.service';
 import { useAuthStore, getStoredToken } from '../store/useAuthStore';
 import { useAuthGuard } from '../hooks/useAuthGuard';
 import { MotivoCita } from './citas/MotivoCita';
+import { CalendarioFecha } from './citas/CalendarioFecha';
+import { hoyEcuador } from '../lib/fechas';
 
 export interface BookingPageProps {
     labId: string;
@@ -99,15 +100,16 @@ export const BookingPage: React.FC<BookingPageProps> = ({
     const maxAdvanceDays = parseInt(settings?.max_advance_days || "4") || 4;
     const maxTurnsLimit = parseInt(settings?.max_turns_per_day || "4") || 4;
     const slotInterval = settings?.slot_interval || "30";
-    const todayObj = new Date();
+    // Hoy y fecha máxima según el calendario de Ecuador (en UTC, después de las 19:00 "hoy" ya sería mañana)
+    const todayObj = hoyEcuador();
     const todayStr = todayObj.toISOString().split('T')[0];
 
-    const maxDateObj = new Date();
-    maxDateObj.setDate(todayObj.getDate() + maxAdvanceDays);
+    const maxDateObj = new Date(todayObj);
+    maxDateObj.setUTCDate(todayObj.getUTCDate() + maxAdvanceDays);
     const maxDateStr = maxDateObj.toISOString().split('T')[0];
 
-    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedDate = e.target.value;
+
+    const handleDateChange = (selectedDate: string) => {
         if (!selectedDate) return;
 
         if (selectedDate < todayStr) {
@@ -263,14 +265,20 @@ export const BookingPage: React.FC<BookingPageProps> = ({
                 <div className="lg:col-span-4 space-y-8">
                     <div className="space-y-6">
                         <div>
-                            <label className="block text-sm font-medium text-text-main mb-1 uppercase tracking-wider">Fecha de Atención</label>
-                            <Input
-                                type="date"
-                                value={date}
-                                onChange={handleDateChange}
-                                className="w-full bg-surface-subtle border-border focus:border-primary focus:ring-2 focus:ring-gold/25 transition-all p-4 cursor-pointer"
-                                min={todayStr}
-                                max={maxDateStr}
+                            <label htmlFor="fecha" className="block text-sm font-medium text-text-main mb-2 uppercase tracking-wider">Fecha de Atención</label>
+                            <CalendarioFecha
+                                id="fecha"
+                                valor={date}
+                                minimo={todayStr}
+                                maximo={maxDateStr}
+                                esLaborable={(d) => d.getUTCDay() !== 0 && d.getUTCDay() !== 6}
+                                onChange={(fecha) => {
+                                    if (fecha) return handleDateChange(fecha);
+                                    // "Borrar": limpia la fecha y los turnos, como el campo nativo
+                                    setDate('');
+                                    setAvailability([]);
+                                    setSelectedHours([]);
+                                }}
                             />
                             <p className="text-[11px] text-muted mt-1.5 font-medium">
                                 📅 Rango permitido: desde hoy hasta el <strong className="text-primary">{maxDateStr}</strong> ({maxAdvanceDays} días de anticipación).

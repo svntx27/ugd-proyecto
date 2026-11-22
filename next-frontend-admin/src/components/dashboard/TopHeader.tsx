@@ -37,7 +37,10 @@ export function TopHeader() {
     const currentUser = mounted ? user : null;
 
     const getGreeting = () => {
-        const hour = new Date().getHours();
+        // Hora de Ecuador: en Vercel el servidor trabaja en UTC y getHours() daría 5 horas de más
+        const hour = Number(
+            new Intl.DateTimeFormat("en-US", { hour: "numeric", hourCycle: "h23", timeZone: "America/Guayaquil" }).format(new Date())
+        );
         if (hour >= 5 && hour < 12) return "Buenos días";
         if (hour >= 12 && hour < 19) return "Buenas tardes";
         return "Buenas noches";

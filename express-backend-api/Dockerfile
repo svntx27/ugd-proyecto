@@ -12,7 +12,7 @@ RUN apk add --no-cache openssl libc6-compat
 COPY package.json bun.lock ./
 COPY prisma ./prisma/
 
-# Instalar dependencias de producción
+# Instalar dependencias
 RUN bun install
 
 # Generar el cliente Prisma optimizado para el entorno contenedor

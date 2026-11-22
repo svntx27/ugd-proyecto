@@ -77,7 +77,8 @@ export const construirTrayectoria = (expediente: ExpedienteDoctoralReal | null, 
             id: adenda.id,
             tipo: 'adenda',
             titulo: `Adenda N° ${adenda.numeroAdenda}`,
-            detalle: [adenda.tipoModificacion, adenda.meses != null ? `${adenda.meses} meses` : null].filter(Boolean).join(' · ') || null,
+            // Los meses registrados en 0 no aportan: la duración real se calcula con las fechas
+            detalle: [adenda.tipoModificacion, adenda.meses ? `${adenda.meses} meses` : null].filter(Boolean).join(' · ') || null,
             inicio,
             fin,
             estado: estadoPorFechas(inicio, fin, hoy),
@@ -88,8 +89,10 @@ export const construirTrayectoria = (expediente: ExpedienteDoctoralReal | null, 
     const devInicio = parseFecha(dev?.fechaInicio);
     const devFin = parseFecha(dev?.fechaFinEstimada);
 
-    // La graduación coincide con el inicio del devengamiento; solo se muestra si el expediente está graduado
-    const graduacion = expediente.estado?.toUpperCase() === 'GRADUADO' ? devInicio : null;
+    // La graduación coincide con el inicio del devengamiento. Se muestra si el expediente está graduado
+    // o ya en la fase de devengamiento (quien devenga, ya se graduó).
+    const ESTADOS_GRADUADOS = ['GRADUADO', 'EN_DEVENGAMIENTO', 'DEVENGADO'];
+    const graduacion = ESTADOS_GRADUADOS.includes(expediente.estado?.toUpperCase() || '') ? devInicio : null;
     if (graduacion) {
         hitos.push({
             id: 'graduacion',
