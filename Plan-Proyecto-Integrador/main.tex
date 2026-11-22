@@ -1,0 +1,74 @@
+% ==============================================================================
+% PROYECTO INTEGRADOR - UNIDAD DE GESTIÓN DE DOCTORADOS (FICA - UCE)
+% ARCHIVO PRINCIPAL: main.tex
+% ==============================================================================
+
+\documentclass[12pt, a4paper]{article}
+
+% Carga de Paquetes de Configuración (Incluye Garamond e Interlineado 1.5)
+\input{config/packages.tex}
+
+% Carga de Estilos y Formatos Personalizados
+\input{config/styles.tex}
+
+\begin{document}
+
+% ------------------------------------------------------------------------------
+% PÁGINAS PRELIMINARES (Garamond 12pt, Interlineado 1.5, Hojas Independientes Sin Numeración)
+% ------------------------------------------------------------------------------
+\pagenumbering{gobble} % Desactiva la numeración de páginas
+\pagestyle{empty} % Garantiza cero encabezados y pies de página en preliminares
+
+% 1. Carátula Institucional
+\input{sections/00_caratula.tex}
+
+% 2. Documentos Oficiales de Titulación, Autorización y Confidencialidad
+\input{sections/00_carta_entrega.tex}
+\input{sections/00_aceptacion_tutor.tex}
+\input{sections/00_acuerdo_confidencialidad.tex}
+\input{sections/00_declaracion_responsabilidad_pi.tex}
+
+% 3. Dedicatorias (3 Hojas Independientes)
+\input{sections/00_dedicatoria_general.tex}
+\input{sections/00_dedicatoria_freddy.tex}
+\input{sections/00_dedicatoria_dennis.tex}
+
+% 4. Agradecimientos (3 Hojas Independientes)
+\input{sections/00_agradecimiento_general.tex}
+\input{sections/00_agradecimiento_freddy.tex}
+\input{sections/00_agradecimiento_dennis.tex}
+
+% 5. Resumen y Abstract (2 Hojas Independientes)
+\input{sections/00_resumen.tex}
+\input{sections/00_abstract.tex}
+
+% 6. Tabla de Contenidos e Índice de Tablas (Páginas Preliminares)
+\thispagestyle{empty}
+\hypersetup{linkcolor=black}
+\tableofcontents
+\newpage
+
+\thispagestyle{empty}
+\listoftables
+\newpage
+\hypersetup{linkcolor=UceBlue}
+
+% ------------------------------------------------------------------------------
+% CUERPO DEL DOCUMENTO (INICIA NUMERACIÓN DE PÁGINAS ARÁBIGA)
+% ------------------------------------------------------------------------------
+\pagenumbering{arabic} % Inicia numeración arábiga a partir del Capítulo 1 / Sección 1
+\pagestyle{fancy}
+
+\input{sections/01_analisis_problema.tex}
+\input{sections/02_investigacion.tex}
+\input{sections/03_justificacion.tex}
+\input{sections/04_objetivos.tex}
+\input{sections/05_alcance_limitaciones.tex}
+\input{sections/06_marco_teorico.tex}
+\input{sections/07_metodologia.tex}
+\input{sections/08_cronograma_planificacion.tex}
+\input{sections/09_recursos_presupuesto.tex}
+\input{sections/10_referencias.tex}
+% \input{sections/11_anexos.tex} % Los anexos documentales y prototipos se incorporarán en la memoria técnica final de titulación.
+
+\end{document}

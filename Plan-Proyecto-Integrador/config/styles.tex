@@ -1,0 +1,55 @@
+% ==========================================
+% STYLES AND CUSTOM FORMATTING CONFIGURATION
+% ==========================================
+
+% Definición de Colores Institucionales
+\definecolor{UceBlue}{HTML}{003366}
+\definecolor{UceBlueLight}{HTML}{0055A5}
+\definecolor{DarkText}{HTML}{222222}
+\definecolor{TableHeadBg}{HTML}{003366}
+\definecolor{TableAltRow}{HTML}{F4F6F9}
+\definecolor{BorderColor}{HTML}{CCCCCC}
+
+% Configuración de Hipervínculos
+\hypersetup{
+    colorlinks=true,
+    linkcolor=UceBlue,
+    citecolor=UceBlueLight,
+    urlcolor=UceBlue,
+    pdfauthor={Tapia Rea Freddy Xavier, Trujillo Vistin Dennis Adrian},
+    pdftitle={Diseño e implementación de una plataforma web modular para la gestión integral de procesos becarios de la Universidad Central del Ecuador},
+    pdfsubject={Proyecto Integrador - FICA UCE},
+    pdfkeywords={Next.js, Astro, PostgreSQL, UCE, Gestión Becaria, Doctorados}
+}
+
+% Formato de Encabezados y Pies de Página
+\pagestyle{empty}
+\fancyhf{}
+\rhead{\small \color{gray} Proyecto Integrador - FICA UCE}
+\lhead{\small \color{gray} Unidad de Gestión de Doctorados}
+\rfoot{\thepage}
+\lfoot{\small \color{gray} Carrera de Ingeniería en Ciencias de la Computación}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Formato de Títulos de Sección
+\titleformat{\section}
+  {\color{UceBlue}\normalfont\large\bfseries}
+  {\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\color{UceBlueLight}\normalfont\large\bfseries}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\color{DarkText}\normalfont\bfseries}
+  {\thesubsubsection}{1em}{}
+
+% Interlineado y Espaciado de Párrafo
+\renewcommand{\baselinestretch}{1.15}
+\setlength{\parskip}{0.6em}
+\setlength{\parindent}{0pt}
+
+% Personalización de Tablas
+\renewcommand{\arraystretch}{1.2}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}

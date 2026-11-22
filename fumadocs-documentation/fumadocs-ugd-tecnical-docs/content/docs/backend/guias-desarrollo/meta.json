@@ -1,0 +1,8 @@
+{
+  "title": "Guías para Desarrolladores",
+  "pages": [
+    "puesta-en-marcha",
+    "sembrado-datos",
+    "pruebas-manuales-curl"
+  ]
+}

@@ -1,0 +1,108 @@
+---
+title: Integración con el Backend
+description: Flujos de consumo de la API REST, manejo de sesiones JWT y suscripción a Server-Sent Events en el panel administrativo.
+---
+
+Este documento describe cómo el **Frontend Administrativo** debe interactuar con el backend de la UGD (`express-backend-api`).
+
+---
+
+## 1. Flujo de Autenticación de Administradores
+
+El frontend administrativo debe consumir exclusivamente el endpoint especializado:
+
+<ApiEndpoint method="POST" path="/api/auth/admin-login" auth={false} />
+
+### Protocolo de Inicio de Sesión
+1. El usuario ingresa correo institucional y contraseña.
+2. Si el usuario pertenece a `DESARROLLADOR`, `DIRECTOR`, `ANALISTA_PROCESOS` o `ANALISTA_TECNICO`, el servidor responde `200 OK` con el token JWT:
+   ```json
+   {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+     "role": "admin",
+     "role_code": "DIRECTOR",
+     "user": {
+       "id": "...",
+       "name": "Dra. María Belén Ortiz",
+       "permissions": ["USUARIOS_VER", "USUARIOS_CREAR", "..."]
+     }
+   }
+   ```
+3. El frontend almacena el token de forma segura (ej: cookie `httpOnly` o `localStorage`/`sessionStorage` seguro).
+4. El frontend guarda el arreglo `permissions` en el estado global (Zustand / Redux / Context) para ocultar o deshabilitar elementos de la interfaz a los que el rol no tiene acceso.
+
+---
+
+## 2. Inyección de Cabeceras en Peticiones HTTP
+
+Toda petición subsecuente a la API debe incorporar la cabecera estándar de autorización:
+
+```http
+Authorization: Bearer <TOKEN_JWT>
+Content-Type: application/json
+```
+
+### Interceptor de Respuestas (Error Handling)
+El cliente HTTP del frontend (Axios o wrapper de Fetch) debe interceptar las respuestas de error:
+- **`401 Unauthorized`:** El token expiró o la cuenta fue inhabilitada. La aplicación debe limpiar el almacenamiento local y redirigir inmediatamente a `/login`.
+- **`403 Forbidden`:** El usuario intentó acceder a una funcionalidad no autorizada por su rol. Debe mostrarse una alerta visual sin desloguear.
+
+---
+
+## 3. Suscripción en Tiempo Real al Stream SSE
+
+Para mantener la vista de citas actualizada en vivo sin sobrecargar el servidor con sondeos periódicos (polling), el frontend administrativo debe abrir una conexión persistente:
+
+```typescript
+// Hook o servicio de conexión SSE en el frontend administrativo
+import { useEffect, useState } from "react";
+
+export function useAppointmentsStream(jwtToken: string) {
+  const [appointments, setAppointments] = useState<any[]>([]);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!jwtToken) return;
+
+    // Pasamos el token en query param porque EventSource no envía headers personalizados
+    const url = `http://localhost:3000/api/appointments/stream?token=${encodeURIComponent(jwtToken)}`;
+    const eventSource = new EventSource(url);
+
+    eventSource.addEventListener("connected", () => {
+      setIsConnected(true);
+    });
+
+    eventSource.addEventListener("appointment:created", (e) => {
+      const createdList = JSON.parse(e.data);
+      // Agregar o actualizar las nuevas citas en la tabla
+      setAppointments((prev) => [...createdList, ...prev]);
+    });
+
+    eventSource.addEventListener("appointment:cancelled", (e) => {
+      const { id } = JSON.parse(e.data);
+      // Marcar la cita como cancelada o liberarla
+      setAppointments((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, estado: "cancelada" } : item))
+      );
+    });
+
+    eventSource.addEventListener("appointment:rescheduled", (e) => {
+      const updated = JSON.parse(e.data);
+      setAppointments((prev) =>
+        prev.map((item) => (item.id === updated.id ? updated : item))
+      );
+    });
+
+    eventSource.onerror = () => {
+      setIsConnected(false);
+      // El navegador reintenta la conexión automáticamente
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, [jwtToken]);
+
+  return { appointments, isConnected };
+}
+```

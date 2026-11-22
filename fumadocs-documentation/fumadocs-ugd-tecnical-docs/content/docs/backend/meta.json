@@ -1,0 +1,12 @@
+{
+  "title": "Backend API",
+  "description": "Servicios REST, Prisma ORM y SSE",
+  "icon": "Server",
+  "root": true,
+  "pages": [
+    "index",
+    "arquitectura",
+    "servicios",
+    "guias-desarrollo"
+  ]
+}

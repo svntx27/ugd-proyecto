@@ -1,0 +1,8 @@
+node_modules/
+.codegraph/
+AGENTS.md
+CLAUDE.md
+
+# Proteccion de datos institucionales sensibles (UGD)
+**/prisma/data/official/*
+!**/prisma/data/official/README.md

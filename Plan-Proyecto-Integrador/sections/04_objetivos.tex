@@ -1,0 +1,18 @@
+% ==========================================
+% SECCIÓN 5: OBJETIVOS
+% ==========================================
+
+\section{OBJETIVOS}
+
+\subsection{Objetivo General}
+
+Desarrollar una demostración tecnológica interactiva (demo funcional) del Sistema de Gestión de Doctorados (SGD), implementando una plataforma web modular desacoplada conformada por un panel administrativo en Next.js 16 para la gestión integral de programas de doctorado y estudiantes sin hojas de cálculo, un portal estudiantil en Astro con visualización del estado de expedientes (documentos entregados y faltantes) y un sistema de reservas de citas en tiempo real con el personal de la Unidad, interconectados mediante una API REST en Express.js con base relacional PostgreSQL/Prisma sobre un banco de datos sintéticos con perfiles ficticios modelados a partir de los formatos institucionales oficiales, acompañada de manuales interactivos en Fumadocs.
+
+\subsection{Objetivos Específicos}
+
+\begin{enumerate}
+    \item Analizar las estructuras y formatos de las hojas de cálculo de Excel oficiales de la Unidad para estructurar un banco de pruebas con expedientes sintéticos basados en perfiles ficticios de ejemplo (garantizando un riesgo nulo de exposición de personas reales), y diseñar una base de datos relacional PostgreSQL normalizada mediante Prisma ORM para garantizar la integridad de la información académica, expedientes y citas.
+    \item Implementar un panel de administración web en Next.js 16 y React 19 con control de acceso RBAC que permita al personal de la Unidad gestionar de forma centralizada todos los programas de doctorado, monitorear los expedientes estudiantiles, administrar la agenda y calendario de citas reservadas por los estudiantes y emitir reportes automatizados, reemplazando el uso de hojas de cálculo de Excel.
+    \item Desarrollar un portal web estudiantil en Astro y React para los docentes becarios que proporcione la visualización clara y en tiempo real del estado de su expediente (detallando los documentos entregados y los requisitos pendientes), un sistema de reservas y agendamiento de citas en línea en tiempo real con los miembros de la Unidad para atención personalizada, autogestión de solicitudes y descarga de certificados digitales.
+    \item Construir la capa de servicios API REST centralizada en Express.js bajo contratos de interfaz desacoplados (\textit{mock services}) para coordinar la comunicación entre ambos portales y la persistencia de datos, desplegar la demo funcional en la nube y elaborar los manuales técnicos y de usuario interactivos en Fumadocs para facilitar su operación y futura transferencia institucional.
+\end{enumerate}

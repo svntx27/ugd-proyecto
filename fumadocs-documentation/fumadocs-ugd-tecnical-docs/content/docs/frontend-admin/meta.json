@@ -1,0 +1,11 @@
+{
+  "title": "Frontend Administrativo",
+  "description": "Monitor de citas en vivo y gestión UGD",
+  "icon": "LayoutDashboard",
+  "root": true,
+  "pages": [
+    "index",
+    "pantallas",
+    "integracion-api"
+  ]
+}

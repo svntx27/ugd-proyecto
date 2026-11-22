@@ -1,0 +1,275 @@
+@import "tailwindcss";
+
+:root {
+  /* ==========================================================================
+   * PALETA INSTITUCIONAL: UNIVERSIDAD CENTRAL DEL ECUADOR (DEEP NAVY & GOLD)
+   * UGD - Vicerrectorado de Investigación, Doctorados e Innovación
+   * ========================================================================== */
+
+  /* Fondos y Superficies (Luminosos y Modernos, libres de tono arena) */
+  --background: #F5F7FA;
+  --foreground: #101E33;
+  --foreground-soft: #1E3352;
+  --foreground-muted: #52667D;
+
+  --card: #FFFFFF;
+  --card-foreground: #101E33;
+  --popover: #FFFFFF;
+  --popover-foreground: #101E33;
+
+  --surface-subtle: #F0F3F7;
+  --surface-hover: #E7ECF2;
+  --surface-active: #DCE3EB;
+
+  --muted: #EFF3F7;
+  --muted-foreground: #5B6F87;
+  --muted-subtle: #8799AF;
+
+  /* Bordes, Separadores e Inputs */
+  --border: #DFE5EB;
+  --border-subtle: #EDF1F5;
+  --border-strong: #C8D2DC;
+  --input: #DFE5EB;
+  --ring: #B58A45;
+
+  /* Marca / Primario (Deep Navy Institucional UCE) */
+  --primary: #172D4D;
+  --primary-hover: #102138;
+  --primary-foreground: #FFFFFF;
+  --primary-focus: #24416B;
+  --primary-deep: #0C1726;
+  --primary-deep-hover: #070E17;
+  --primary-darkest: #04080E;
+  --primary-hero-end: #172D4D;
+  --primary-glow: #3E6394;
+
+  /* Oro Institucional UCE (Presente, Distinguido y Accesible) */
+  --gold: #B58A45;
+  --gold-hover: #9E7432;
+  --gold-foreground: #FFFFFF;
+  --gold-light: #FBF5EA;
+  --gold-border: #E8CF9F;
+  --gold-text: #875C1C;
+
+  /* Secundario y Acento (Champagne Dorado Luminoso) */
+  --secondary: #F0F3F7;
+  --secondary-foreground: #172D4D;
+  --accent: #FDF5E6;
+  --accent-hover: #F8E8CC;
+  --accent-border: #E8CF9F;
+  --accent-foreground: #875C1C;
+  --accent-text: #875C1C;
+
+  /* Semánticos: Éxito (Verde Apagado / Sobrio) */
+  --success: #276848;
+  --success-dot: #32845C;
+  --success-bg: #EBF5EF;
+  --success-hover: #D8ECDF;
+  --success-border: #C1E1CE;
+
+  /* Semánticos: Advertencia / Pre-registro / Pendiente (Ámbar Cálido) */
+  --warning: #996211;
+  --warning-dot: #B58A45;
+  --warning-bg: #FCF4E8;
+  --warning-hover: #F7E5CA;
+  --warning-border: #EED4AF;
+
+  /* Semánticos: Destructivo / Error / Cancelado (Rojo Borgoña Apagado) */
+  --destructive: #A33B3B;
+  --destructive-hover: #8C2F2F;
+  --destructive-foreground: #FFFFFF;
+  --destructive-bg: #FCEEEE;
+  --destructive-bg-hover: #F7D7D7;
+  --destructive-border: #F0C4C4;
+  --destructive-text: #8A2D2D;
+
+  /* Semánticos: Informativo / Completado / Externo (Azul Desaturado) */
+  --info: #31587D;
+  --info-dot: #4676A3;
+  --info-bg: #ECF3F9;
+  --info-border: #C4D9EC;
+
+  /* Roles e Infraestructura */
+  --role-director: #875C1C;
+  --role-director-bg: #FCF5E8;
+  --role-director-bg-hover: #F5E8D2;
+  --role-director-border: #E8CF9F;
+  --role-director-dot: #B58A45;
+
+  --role-dev: #172D4D;
+  --role-dev-bg: #EEF3F8;
+  --role-dev-border: #C7D8E8;
+  --role-dev-dot: #2A4A75;
+
+  --role-process: #204C5E;
+  --role-process-bg: #EAF1F5;
+  --role-process-border: #BFD5DF;
+  --role-process-dot: #2D6B84;
+
+  --role-tech: #4A3C63;
+  --role-tech-bg: #F2EEF7;
+  --role-tech-border: #D7CAE4;
+  --role-tech-dot: #6A568C;
+
+  /* Scrollbars limpios */
+  --scrollbar-thumb: #CBD5E1;
+  --scrollbar-thumb-hover: #94A3B8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-foreground-soft: var(--foreground-soft);
+  --color-foreground-muted: var(--foreground-muted);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-active: var(--surface-active);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted-subtle: var(--muted-subtle);
+
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-focus: var(--primary-focus);
+  --color-primary-deep: var(--primary-deep);
+  --color-primary-deep-hover: var(--primary-deep-hover);
+  --color-primary-darkest: var(--primary-darkest);
+  --color-primary-hero-end: var(--primary-hero-end);
+  --color-primary-glow: var(--primary-glow);
+
+  --color-gold: var(--gold);
+  --color-gold-hover: var(--gold-hover);
+  --color-gold-foreground: var(--gold-foreground);
+  --color-gold-light: var(--gold-light);
+  --color-gold-border: var(--gold-border);
+  --color-gold-text: var(--gold-text);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-border: var(--accent-border);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-text: var(--accent-text);
+
+  --color-success: var(--success);
+  --color-success-dot: var(--success-dot);
+  --color-success-bg: var(--success-bg);
+  --color-success-hover: var(--success-hover);
+  --color-success-border: var(--success-border);
+
+  --color-warning: var(--warning);
+  --color-warning-dot: var(--warning-dot);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-hover: var(--warning-hover);
+  --color-warning-border: var(--warning-border);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-bg: var(--destructive-bg);
+  --color-destructive-bg-hover: var(--destructive-bg-hover);
+  --color-destructive-border: var(--destructive-border);
+  --color-destructive-text: var(--destructive-text);
+
+  --color-info: var(--info);
+  --color-info-dot: var(--info-dot);
+  --color-info-bg: var(--info-bg);
+  --color-info-border: var(--info-border);
+
+  --color-role-director: var(--role-director);
+  --color-role-director-bg: var(--role-director-bg);
+  --color-role-director-bg-hover: var(--role-director-bg-hover);
+  --color-role-director-border: var(--role-director-border);
+  --color-role-director-dot: var(--role-director-dot);
+
+  --color-role-dev: var(--role-dev);
+  --color-role-dev-bg: var(--role-dev-bg);
+  --color-role-dev-border: var(--role-dev-border);
+  --color-role-dev-dot: var(--role-dev-dot);
+
+  --color-role-process: var(--role-process);
+  --color-role-process-bg: var(--role-process-bg);
+  --color-role-process-border: var(--role-process-border);
+  --color-role-process-dot: var(--role-process-dot);
+
+  --color-role-tech: var(--role-tech);
+  --color-role-tech-bg: var(--role-tech-bg);
+  --color-role-tech-border: var(--role-tech-border);
+  --color-role-tech-dot: var(--role-tech-dot);
+}
+
+html, body, .scrollbar-stable {
+  scrollbar-gutter: stable;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbars limpios */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--background);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ==========================================================================
+ * TRANSICIONES SUAVES (FADE-IN SUTIL PARA CARGAS Y NAVEGACIÓN)
+ * ========================================================================== */
+@keyframes softFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: softFadeIn 0.25s ease-out forwards;
+}

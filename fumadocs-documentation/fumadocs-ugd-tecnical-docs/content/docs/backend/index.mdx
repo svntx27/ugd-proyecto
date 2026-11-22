@@ -1,0 +1,107 @@
+---
+title: Backend API - Visión General
+description: Guía de arquitectura, servicios REST, modelo de datos relacional y tiempo real para el backend UGD.
+---
+
+El backend de la **Unidad de Gestión de Doctorados (UGD)** está concebido como una API REST desacoplada, moderna y de alto rendimiento desarrollada con **Express.js 5.x**, **TypeScript** y ejecutada sobre el runtime **Bun** (compatible con Node.js 20+). Se conecta a una base de datos relacional PostgreSQL en **NeonTech** mediante el ORM **Prisma 6.4.0** e integra comunicación en vivo para citas presenciales mediante **Server-Sent Events (SSE)**.
+
+Este módulo documental centraliza la arquitectura de software, especificaciones técnicas de endpoints, modelos de datos y guías de desarrollo para que nuevos ingenieros puedan incorporarse, comprender el diseño y escalar el sistema de manera ordenada.
+
+---
+
+## Estructura Modular de la Documentación
+
+La documentación del backend se divide en tres secciones especializadas:
+
+### 1. Arquitectura y Fundamentos
+Comprende los pilares de diseño del sistema, el sistema de archivos del proyecto, la estructura de datos relacional y el modelo de seguridad.
+
+<Cards>
+  <Card
+    title="Stack y Puesta en Marcha"
+    href="/docs/backend/arquitectura/stack"
+    description="Tecnologías, arquitectura en capas, variables de entorno (.env) y configuración de rutas duales y alias."
+  />
+  <Card
+    title="Estructura del Código Fuente"
+    href="/docs/backend/arquitectura/estructura-codigo"
+    description="Organización modular de carpetas (controllers, routes, middleware, lib, prisma), ciclo de vida de peticiones y extensión."
+  />
+  <Card
+    title="Modelo Relacional Prisma"
+    href="/docs/backend/arquitectura/modelo-datos"
+    description="Diagrama ER, diccionario completo de los 16 modelos relacionales (RBAC, Citas y Dominio Académico de Doctorados)."
+  />
+  <Card
+    title="Seguridad y Matriz RBAC"
+    href="/docs/backend/arquitectura/seguridad-rbac"
+    description="Flujo de tokens JWT, ciclo de doble identidad (User vs Doctorando) y matriz completa de 5 roles y 15 permisos."
+  />
+</Cards>
+
+---
+
+### 2. Servicios y Endpoints API
+Catálogo detallado de todas las rutas HTTP disponibles, con especificación de cabeceras, parámetros, payloads JSON y respuestas.
+
+<Cards>
+  <Card
+    title="Autenticación y Usuarios"
+    href="/docs/backend/servicios/autenticacion-usuarios"
+    description="Verificación de nómina institucional, activación de cuentas de doctorandos, login dual, perfiles y gestión de usuarios."
+  />
+  <Card
+    title="Citas y Representantes UGD"
+    href="/docs/backend/servicios/citas-representantes"
+    description="Algoritmo de franjas horarias (slots), disponibilidad dinámica, agendamiento atómico, cancelación y reprogramación."
+  />
+  <Card
+    title="Configuración y Respaldos"
+    href="/docs/backend/servicios/configuracion-backups"
+    description="Gestión de parámetros clave-valor (system_settings), transacciones masivas y exportación segura de backups en JSON."
+  />
+  <Card
+    title="Tiempo Real con Server-Sent Events"
+    href="/docs/backend/servicios/tiempo-real-sse"
+    description="Canal de streaming unidireccional (/stream), ciclo de vida de clientes, eventos en vivo y latido/heartbeat."
+  />
+</Cards>
+
+---
+
+### 3. Guías Operativas para Desarrolladores
+Instrucciones prácticas y reproducibles para el desarrollo diario, migración de base de datos y validación de endpoints.
+
+<Cards>
+  <Card
+    title="Puesta en Marcha Local"
+    href="/docs/backend/guias-desarrollo/puesta-en-marcha"
+    description="Guía paso a paso para clonar, configurar variables, sincronizar base de datos con Neon DB y ejecutar el servidor."
+  />
+  <Card
+    title="Estrategia de Sembrado de Datos"
+    href="/docs/backend/guias-desarrollo/sembrado-datos"
+    description="Sembrado de roles/permisos iniciales y carga masiva concurrente de más de 550 doctorandos oficiales de la UCE."
+  />
+  <Card
+    title="Guía de Pruebas Manuales con cURL"
+    href="/docs/backend/guias-desarrollo/pruebas-manuales-curl"
+    description="Colección de comandos cURL listos para probar flujos críticos: verificación, activación, login, reservas y respaldos."
+  />
+</Cards>
+
+---
+
+## Ficha Resumen del Backend
+
+| Componente | Especificación Técnica |
+| :--- | :--- |
+| **Repositorio Local** | `D:\GitHub\Proyecto-Integrador\express-backend-api` |
+| **Runtime Principal** | [Bun](https://bun.sh/) v1.2+ (totalmente compatible con Node.js 20+) |
+| **Framework HTTP** | Express.js v5.x |
+| **Lenguaje** | TypeScript 5.x |
+| **Motor de Base de Datos** | PostgreSQL 16+ alojado en **NeonTech** (`aws-sa-east-1`) con connection pooling |
+| **ORM** | Prisma v6.4.0 |
+| **Seguridad de Acceso** | JSON Web Tokens (`jsonwebtoken`) + Hasheo de contraseñas con `bcryptjs` (salt 10) |
+| **Mecanismo Tiempo Real** | Server-Sent Events (SSE) nativo con tipado de eventos y latido periódico |
+| **Enrutamiento** | Soporte de prefijo dual (`/api/*` y rutas directas `/*`) y alias de compatibilidad (`/personal-ugd`, `/citas`, `/reservas`, `/labs`) |

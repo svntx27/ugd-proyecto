@@ -1,0 +1,183 @@
+---
+title: Citas y Representantes UGD
+description: Especificación completa de los módulos de agendamiento de citas presenciales, disponibilidad dinámica, franjas horarias y representantes de atención.
+---
+
+Este documento detalla la lógica de negocio y los endpoints de la API para la gestión de **Representantes UGD (`/api/representatives`)** y el motor de **Agendamiento de Citas Presenciales (`/api/appointments`)**.
+
+---
+
+## 1. Módulo de Representantes UGD (`/api/representatives`)
+
+*Alias de compatibilidad:* `/api/personal-ugd`, `/api/labs`, `/representatives`, `/personal-ugd`, `/labs`
+
+### 1.1 Listar Representantes
+
+<ApiEndpoint method="GET" path="/api/representatives" auth={false} />
+
+Lista todos los analistas y funcionarios de la UGD registrados para atención presencial.
+
+#### Ejemplo de Respuesta (`200 OK`)
+```json
+[
+  {
+    "id": 1,
+    "name": "Ing. Carlos Mendoza",
+    "title": "Analista de Becas y Convenios",
+    "location": "Ventanilla 1 - UGD Central",
+    "capacity": 1,
+    "status": "activo"
+  }
+]
+```
+
+---
+
+### 1.2 Consultar Disponibilidad de Franjas Horarias
+
+<ApiEndpoint method="GET" path="/api/representatives/disponibilidad" auth={false} />
+
+Calcula en tiempo real la disponibilidad de turnos para un representante en una fecha determinada.
+
+<ParamTable title="Parámetros de Consulta (Query Params)">
+  <ParamField name="fecha" type="string (YYYY-MM-DD)" required={true}>
+    Fecha objeto de la consulta.
+  </ParamField>
+  <ParamField name="representative_id" type="number" required={false}>
+    ID del representante a consultar (opcional, consulta el primero por defecto).
+  </ParamField>
+</ParamTable>
+
+#### Algoritmo Dinámico de Franjas (`buildSlots`)
+El controlador no utiliza franjas fijas en código. En su lugar, lee de la tabla `system_settings`:
+* `start_hour`: Hora de inicio de atención (por defecto `"08:00"`).
+* `end_hour`: Hora de fin de atención (por defecto `"16:00"`).
+* `slot_interval`: Duración de cada turno en minutos (por defecto `30`).
+
+#### Ejemplo de Respuesta (`200 OK`)
+```json
+{
+  "fecha": "2026-03-25",
+  "representative": {
+    "id": 1,
+    "name": "Ing. Carlos Mendoza"
+  },
+  "slots": [
+    { "time": "08:00", "available": true },
+    { "time": "08:30", "available": false },
+    { "time": "09:00", "available": true }
+  ]
+}
+```
+
+---
+
+### 1.3 Crear Representante UGD
+
+<ApiEndpoint method="POST" path="/api/representatives" auth="Bearer JWT" role="ADMINISTRATIVO" />
+
+Registra un nuevo analista en el catálogo de atención. Requiere roles `DESARROLLADOR` o `DIRECTOR`.
+
+---
+
+### 1.4 Modificar o Eliminar Representante
+
+* **Modificar:** `PUT /api/representatives/:id` (actualiza nombre, cargo, ubicación o estado).
+* **Eliminar:** `DELETE /api/representatives/:id` (protege la integridad: no permite eliminar si el analista tiene citas históricas asociadas).
+
+---
+
+## 2. Módulo de Citas Presenciales (`/api/appointments`)
+
+*Alias de compatibilidad:* `/api/citas`, `/api/reservas`, `/appointments`, `/citas`, `/reservas`
+
+### 2.1 Agendar Cita Presencial
+
+<ApiEndpoint method="POST" path="/api/appointments/agendar" auth="Bearer JWT" />
+
+*Alias:* `POST /api/appointments/reservar`
+
+Permite a un estudiante autenticado agendar una cita. Soporta tanto franjas individuales como selección múltiple de horarios contiguos, procesándose en una única transacción atómica de base de datos.
+
+<ParamTable title="Cuerpo de la Petición">
+  <ParamField name="representative_id" type="number" required={true}>
+    ID del representante UGD seleccionado.
+  </ParamField>
+  <ParamField name="date" type="string (YYYY-MM-DD)" required={true}>
+    Fecha de la cita.
+  </ParamField>
+  <ParamField name="time_slots" type="string[]" required={true}>
+    Array de franjas horarias solicitadas (ej: `["08:30", "09:00"]`).
+  </ParamField>
+  <ParamField name="subject" type="string" required={true}>
+    Motivo de la cita presencial.
+  </ParamField>
+</ParamTable>
+
+#### Emisión Reactiva de Eventos SSE
+Al completarse la transacción atómica con éxito, el controlador dispara inmediatamente un evento global mediante `sseManager.broadcast`:
+```json
+{
+  "event": "appointment_created",
+  "data": {
+    "appointmentId": 45,
+    "date": "2026-03-25",
+    "slots": ["08:30"],
+    "representativeId": 1
+  }
+}
+```
+
+---
+
+### 2.2 Consultar Citas del Estudiante ("Mis Citas")
+
+<ApiEndpoint method="GET" path="/api/appointments/mis-citas" auth="Bearer JWT" />
+
+*Alias:* `GET /api/appointments/mis-reservas`
+
+Retorna todas las citas del usuario autenticado. Cada cita incluye un campo `status` computado dinámicamente:
+
+#### Cálculo Dinámico de Estados (`active`, `expired`, `cancelled`)
+A diferencia del valor en base de datos (`activa`/`cancelada`), la respuesta de la API evalúa la fecha y hora actual en la zona horaria oficial del Ecuador (`America/Guayaquil`):
+* `cancelled`: Si en base de datos figura como `"cancelada"`.
+* `expired`: Si la fecha y hora del turno ya quedaron en el pasado respecto al reloj del servidor.
+* `active`: Si la cita es para hoy o una fecha futura y no ha sido cancelada.
+
+---
+
+### 2.3 Cancelar Cita Propia
+
+<ApiEndpoint method="DELETE" path="/api/appointments/citas/:id" auth="Bearer JWT" />
+
+*Alias:* `DELETE /api/appointments/reservas/:id`
+
+Permite al estudiante cancelar su propia reserva. Emite una notificación reactiva SSE `appointment_cancelled`.
+
+---
+
+## 3. Endpoints Administrativos de Citas
+
+Protegidos con `requireRole("DESARROLLADOR", "DIRECTOR", "ANALISTA_PROCESOS", "ANALISTA_TECNICO")`.
+
+### 3.1 Monitoreo General de Citas
+
+<ApiEndpoint method="GET" path="/api/appointments/admin" auth="Bearer JWT" role="ADMIN" />
+
+Retorna todas las citas del sistema acompañadas de la información del representante y del usuario (con datos de doctorando si aplica).
+
+---
+
+### 3.2 Cancelación Administrativa de Citas
+
+<ApiEndpoint method="DELETE" path="/api/appointments/admin/:id" auth="Bearer JWT" role="ADMIN" />
+
+Permite a los analistas cancelar cualquier cita presencial justificadamente.
+
+---
+
+### 3.3 Reprogramación de Citas (Reschedule)
+
+<ApiEndpoint method="PATCH" path="/api/appointments/admin/:id/reschedule" auth="Bearer JWT" role="ADMIN" />
+
+Permite reasignar una cita a una nueva fecha u horario validando previamente que no existan colisiones horarias.

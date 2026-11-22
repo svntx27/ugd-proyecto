@@ -1,0 +1,82 @@
+---
+title: Integración con el Backend
+description: Contrato de servicios, endpoints consumidos y manejo de autenticación para el portal de usuarios y doctorandos.
+---
+
+Este documento detalla la secuencia de llamadas y el contrato de datos que el **Frontend de Usuarios** debe implementar contra `express-backend-api`.
+
+---
+
+## 1. Mapa de Endpoints Consumidos por el Portal
+
+| Funcionalidad | Método | Endpoint del Backend | Requiere Auth |
+| :--- | :--- | :--- | :---: |
+| **Inicio de Sesión** | `POST` | `/api/auth/login` | No |
+| **Registro Libre de Estudiante** | `POST` | `/api/auth/register` | No |
+| **Verificación en Nómina UGD** | `POST` | `/api/auth/verificar-doctorando` | No |
+| **Activación de Cuenta Oficial** | `POST` | `/api/auth/activar-cuenta` | No |
+| **Perfil y Datos de Expediente**| `GET` | `/api/auth/me` | `Bearer JWT` |
+| **Lista de Representantes** | `GET` | `/api/representatives` | No |
+| **Disponibilidad de Horarios** | `GET` | `/api/representatives/disponibilidad` | No |
+| **Agendar Cita** | `POST` | `/api/appointments/agendar` | `Bearer JWT` |
+| **Consultar Mis Citas** | `GET` | `/api/appointments/mis-citas` | `Bearer JWT` |
+| **Cancelar Cita Propia** | `DELETE`| `/api/appointments/citas/:id` | `Bearer JWT` |
+
+---
+
+## 2. Ejemplo Práctico: Agendamiento de Turno en el Cliente
+
+A continuación se presenta un snippet representativo en TypeScript para el servicio de citas del estudiante:
+
+```typescript
+// Servicio de citas para el frontend de usuarios
+const API_BASE = "http://localhost:3000/api";
+
+export async function fetchAvailableSlots(dateStr: string, representativeId: number) {
+  const params = new URLSearchParams({
+    fecha: dateStr,
+    representative_id: String(representativeId),
+  });
+
+  const res = await fetch(`${API_BASE}/representatives/disponibilidad?${params}`);
+  if (!res.ok) throw new Error("Error al consultar disponibilidad de horarios");
+  return res.json(); // Retorna array: [{ hora: "08:00", disponible: true }, ...]
+}
+
+export async function bookAppointment(
+  jwtToken: string,
+  payload: {
+    representative_id: number;
+    fecha: string; // "YYYY-MM-DD"
+    horas: string[]; // ["08:30", "09:00"]
+    materia: string; // Motivo de la cita
+  }
+) {
+  const res = await fetch(`${API_BASE}/appointments/agendar`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (res.status === 409) {
+    throw new Error("Uno o varios de los horarios seleccionados acaban de ser ocupados. Por favor elija otro turno.");
+  }
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.error || "No se pudo agendar la cita");
+  }
+
+  return res.json();
+}
+```
+
+---
+
+## 3. Manejo de Conflictos y Errores Habituales
+
+- **Conflicto `409 Conflict`:** Si dos estudiantes intentan reservar el mismo bloque a la vez, el backend responderá con error de clave única (`P2002`). La interfaz debe atrapar este código y refrescar automáticamente la disponibilidad con un mensaje amable invitando a seleccionar otro turno.
+- **Fechas Pasadas `400 Bad Request`:** El backend rechaza peticiones con fechas anteriores a la fecha actual en Ecuador (`America/Guayaquil`). El selector de fechas del cliente debe validar esto previamente antes del envío.

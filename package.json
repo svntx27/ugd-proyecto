@@ -1,0 +1,33 @@
+{
+  "name": "proyecto-integrador",
+  "private": true,
+  "workspaces": [
+    "express-backend-api",
+    "astro-frontend-users",
+    "next-frontend-admin",
+    "fumadocs-documentation/fumadocs-ugd-tecnical-docs"
+  ],
+  "scripts": {
+    "predev": "kill-port 3000 3001 3002 4321",
+    "dev": "bun --filter '*' dev",
+    "predev:frontends": "kill-port 3001 3002 4321",
+    "dev:frontends": "bun --filter 'astro-frontend-users' --filter 'next-frontend-admin' --filter 'fumadocs-ugd-tecnical-docs' dev",
+    "predev:backend": "kill-port 3000",
+    "dev:backend": "bun --filter 'express-backend-api' dev",
+    "predev:users": "kill-port 4321",
+    "dev:users": "bun --filter 'astro-frontend-users' dev",
+    "predev:admin": "kill-port 3001",
+    "dev:admin": "bun --filter 'next-frontend-admin' dev",
+    "predev:docs": "kill-port 3002",
+    "dev:docs": "bun --filter 'fumadocs-ugd-tecnical-docs' dev",
+    "db:generate": "bun --filter 'express-backend-api' db:generate",
+    "db:seed": "bun --filter 'express-backend-api' db:seed",
+    "db:seed:doctorandos": "bun --filter 'express-backend-api' db:seed:doctorandos",
+    "db:seed:all": "bun --filter 'express-backend-api' db:seed:all",
+    "stop": "kill-port 3000 3001 3002 4321"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5",
+    "kill-port": "^2.0.1"
+  }
+}

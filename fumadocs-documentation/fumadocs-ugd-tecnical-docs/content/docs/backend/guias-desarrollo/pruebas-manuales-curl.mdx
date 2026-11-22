@@ -1,0 +1,178 @@
+---
+title: Guía de Pruebas Manuales con cURL
+description: Colección de comandos cURL listos para probar y validar todos los flujos del backend UGD desde la terminal o scripts de prueba.
+---
+
+Esta guía proporciona comandos `curl` listos para copiar, pegar y ejecutar directamente en tu terminal (PowerShell, Bash o Zsh) para verificar el funcionamiento de cada endpoint del backend UGD.
+
+---
+
+## 1. Comprobación del Servidor (Health Check)
+
+Valida que el servicio está activo y respondiendo:
+
+```bash
+curl -X GET http://localhost:3000/health
+```
+
+---
+
+## 2. Flujo de Activación de Doctorando
+
+### 2.1 Verificar si un Doctorando Consta en Nómina
+```bash
+curl -X POST http://localhost:3000/api/auth/verificar-doctorando \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cedula": "1700000001",
+    "correo": "doctorando.ejemplo@uce.edu.ec"
+  }'
+```
+
+### 2.2 Activar Cuenta y Definir Contraseña
+```bash
+curl -X POST http://localhost:3000/api/auth/activar-cuenta \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cedula": "1700000001",
+    "correo": "doctorando.ejemplo@uce.edu.ec",
+    "password": "<TuPasswordSegura123!>"
+  }'
+```
+
+---
+
+## 3. Autenticación y Obtención de Token JWT
+
+### 3.1 Iniciar Sesión como Estudiante Doctorando
+```bash
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "doctorando.demo@uce.edu.ec",
+    "password": "<TuPassword>"
+  }'
+```
+
+> **Consejo:** Guarda el token recibido en una variable de entorno para los siguientes comandos:
+> ```bash
+> # En Bash / Zsh:
+> export TOKEN="eyJhbGciOi..."
+> 
+> # En PowerShell:
+> $TOKEN="eyJhbGciOi..."
+> ```
+
+### 3.2 Iniciar Sesión Administrativo Exclusivo
+```bash
+curl -X POST http://localhost:3000/api/auth/admin-login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "director.demo@uce.edu.ec",
+    "password": "<PasswordDirector>"
+  }'
+```
+
+---
+
+## 4. Perfil y Consulta de Usuarios
+
+### 4.1 Consultar Mi Perfil 360°
+```bash
+curl -X GET http://localhost:3000/api/auth/me \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### 4.2 Listar Usuarios (Requiere Permiso `USUARIOS_VER`)
+```bash
+curl -X GET http://localhost:3000/api/users \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+---
+
+## 5. Representantes y Disponibilidad de Citas
+
+### 5.1 Listar Representantes UGD
+```bash
+curl -X GET http://localhost:3000/api/representatives
+```
+
+### 5.2 Consultar Disponibilidad de Franjas en una Fecha
+```bash
+curl -X GET "http://localhost:3000/api/representatives/disponibilidad?fecha=2026-03-25&representative_id=1"
+```
+
+---
+
+## 6. Agendamiento y Gestión de Citas
+
+### 6.1 Agendar una Cita Presencial
+```bash
+curl -X POST http://localhost:3000/api/appointments/agendar \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "representative_id": 1,
+    "date": "2026-03-25",
+    "time_slots": ["08:30"],
+    "subject": "Revisión de informe semestral de tesis doctoral"
+  }'
+```
+
+### 6.2 Consultar "Mis Citas" (con Estado Dinámico)
+```bash
+curl -X GET http://localhost:3000/api/appointments/mis-citas \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### 6.3 Cancelar una Cita Propia
+```bash
+curl -X DELETE http://localhost:3000/api/appointments/citas/1 \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+---
+
+## 7. Pruebas de Tiempo Real (Server-Sent Events)
+
+Conecta al canal de streaming persistente:
+
+```bash
+curl -N -H "Authorization: Bearer $TOKEN" \
+  http://localhost:3000/api/appointments/stream
+```
+
+*(La terminal quedará escuchando indefinidamente y mostrará los mensajes `:keepalive` cada 30 segundos y los eventos en vivo cada vez que se agende o cancele una cita).*
+
+---
+
+## 8. Endpoints Administrativos y Respaldos
+
+### 8.1 Listar Todas las Citas como Administrador
+```bash
+curl -X GET http://localhost:3000/api/appointments/admin \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### 8.2 Reprogramar una Cita
+```bash
+curl -X PATCH http://localhost:3000/api/appointments/admin/1/reschedule \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "newDate": "2026-03-26",
+    "newStartTime": "09:00"
+  }'
+```
+
+### 8.3 Exportar Respaldo Completo de la Base de Datos
+```bash
+curl -X POST http://localhost:3000/api/settings/backup \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "password": "<TuPasswordAdministrador>"
+  }' \
+  -o backup_ugd_$(date +%Y%m%d).json
+```

@@ -1,0 +1,41 @@
+% ==========================================
+% SECCIÓN 4: JUSTIFICACIÓN
+% ==========================================
+
+\section{JUSTIFICACIÓN}
+
+La realización del presente proyecto integrador se fundamenta ampliamente en dimensiones académicas, tecnológicas, operacionales e institucionales, respondiendo de manera directa a los estándares de innovación y pertinencia profesional exigidos en el perfil de egreso de la Carrera de Ingeniería en Ciencias de la Computación de la Universidad Central del Ecuador.
+
+\subsection{Importancia y Utilidad Práctica}
+
+La automatización de la gestión integral de programas de doctorado y de expedientes de estudiantes representa una necesidad imperiosa para la Universidad Central del Ecuador. La sustitución de las hojas de cálculo locales por el Sistema de Gestión de Doctorados (SGD) erradica la duplicidad de información y el desorden operativo, brindando a la Unidad una plataforma centralizada para administrar a los estudiantes y doctorados. Paralelamente, dota a los docentes becarios de un portal moderno donde pueden conocer con absoluta claridad el estado de su expediente —qué documentos tienen entregados y qué recaudos les falta entregar— y acceder a un sistema de reservas en línea en tiempo real para agendar citas personalizadas con los miembros de la Unidad, eliminando visitas presenciales innecesarias y largas filas de espera.
+
+\subsection{Justificación Tecnológica de la Arquitectura Seleccionada}
+
+La concepción arquitectónica del SGD descansa en la selección rigurosa de tecnologías de vanguardia caracterizadas por su alto rendimiento, mantenibilidad a largo plazo, seguridad robusta y perfecta adaptabilidad al entorno informático universitario.
+
+En la capa de administración, se justifica la adopción del marco de trabajo \textbf{Next.js 16 con React 19} para el desarrollo del Panel Administrativo \cite{vercel_nextjs}, \cite{banks_react}. La inclusión de \textit{Server Components} y \textit{Server Actions} de última generación permite procesar operaciones transaccionales complejas de forma nativa en el servidor. Este enfoque minimiza el envío de código ejecutable al navegador cliente y protege las credenciales de conexión a la base de datos, garantizando una interfaz reactiva e inmunizada contra filtraciones de lógica de negocio. Para potenciar el rendimiento de construcción y despliegue, el entorno se complementa con el ejecutor \textbf{Bun}, el cual reduce drásticamente los tiempos de empaquetado informático.
+
+Para el portal destinado a los docentes becarios, se justifica la implementación de \textbf{Astro} en combinación con \textbf{React} bajo la arquitectura de islas (\textit{Islands Architecture}) \cite{astro_docs}. Esta aproximación permite generar páginas estáticas ultraligeras que eliminan el JavaScript innecesario del lado del cliente. De este modo, los docentes becarios pueden acceder desde cualquier dispositivo a la información actualizada de su expediente (visualizando con total transparencia los requisitos y documentos que tienen validados y aquellos que aún tienen pendientes), tramitar solicitudes y certificados, y utilizar un sistema de reservas de citas en línea en tiempo real para coordinar reuniones con el personal de la Unidad cuando requieran orientación personalizada, sin depender de visitas presenciales espontáneas. La experiencia de usuario se fortalece con \textbf{Zustand} para la gestión de estados globales sin código redundante, \textbf{TailwindCSS} para un diseño adaptativo bajo los estándares estéticos institucionales \cite{tailwind_docs}, y \textbf{Driver.js} para desplegar recorridos guiados interactivos (\textit{onboarding}) que capaciten al personal administrativo y a los estudiantes sin requerir extensas sesiones presenciales.
+
+En la capa de lógica de negocio y persistencia, se justifica la utilización de un servidor Backend independiente basado en \textbf{Express.js} \cite{express_docs}, encargado de proveer servicios API REST desacoplados. Esta arquitectura permite incorporar middlewares de seguridad dedicados a la validación estricta de tokens de autenticación JWT \cite{rfc_jwt}, sanitización de datos de entrada y control de acceso basado en roles (RBAC) \cite{ferraiolo_rbac}. La persistencia se soporta sobre \textbf{PostgreSQL} por su robustez en transacciones ACID \cite{postgresql_docs}, administrado mediante el ORM \textbf{Prisma} \cite{prisma_docs}. La elección de Prisma se sustenta en su tipado estático nativo (\textit{type-safety}) con TypeScript, lo que previene errores de consulta en tiempo de compilación y simplifica las migraciones del esquema relacional \cite{elmasri}.
+
+Finalmente, la sostenibilidad del software se respalda en \textbf{Fumadocs} \cite{fumadocs_docs}, una plataforma moderna basada en Next.js y MDX destinada a compilar dos centros de documentación interactiva: un Manual de Usuario para el personal de la Unidad y una Guía Técnica para Desarrolladores, garantizando que futuras promociones de ingenieros de la UCE puedan extender y mantener el sistema sin fricción.
+
+Adicionalmente, se justifica la estrategia de despliegue en la nube mediante plataformas modernas de alojamiento PaaS (Vercel para interfaces web y Render para Backend y base de datos relacional). Esta decisión de ingeniería permite desligar por completo los recursos de hardware, servidores locales físicos y soporte de redes de la universidad durante la etapa de demostración y entrega del proyecto integrador, garantizando una disponibilidad ininterrumpida $24/7$ para su evaluación pública sobre un banco de pruebas de expedientes sintéticos con perfiles ficticios modelados a partir de los formatos institucionales oficiales, acompañada de documentación técnica interactiva en Fumadocs que permita orientar a los equipos universitarios para una eventual adopción en la infraestructura institucional de la UCE.
+
+Es importante precisar que las herramientas, librerías y marcos de trabajo contemplados a lo largo de este documento representan una formulación técnica inicial debidamente fundamentada para orientar el plan del proyecto. No obstante, la utilización definitiva de cada una de estas tecnologías permanece sujeta a revisiones, adaptaciones o sustituciones futuras en función de las necesidades operacionales, directrices técnicas y requerimientos formales que solicite la Unidad de Gestión de Doctorados en las distintas etapas de desarrollo e implantación.
+
+\subsection{Beneficiarios Directos e Indirectos}
+
+La implementación de la propuesta impacta positivamente en diversos estamentos universitarios:
+
+\begin{itemize}[leftmargin=*,noitemsep]
+    \item \textbf{Personal Administrativo de la Unidad (Beneficiarios Directos):} El Director de la Unidad, la Analista de Procesos Universitarios y el Analista Técnico dispondrán de un panel administrativo centralizado que unifica la gestión de programas de doctorado y expedientes estudiantiles, reemplazando el uso de hojas de cálculo de Excel, administrando la agenda de citas solicitadas por los estudiantes y automatizando alertas y certificados bajo seguridad RBAC.
+    \item \textbf{Docentes Becarios de Doctorado (Beneficiarios Directos):} Dispondrán de un portal web estudiantil donde podrán revisar en todo momento el estado detallado de sus trámites y documentos (conociendo exactamente lo que tienen entregado y lo que les falta por presentar), autogestionar solicitudes y certificados, y agendar citas en tiempo real con el personal de la Unidad para recibir atención personalizada sin traslados innecesarios.
+    \item \textbf{Comunidad Universitaria y Facultades (Beneficiarios Indirectos):} La administración central de la UCE y las distintas facultades se beneficiarán de una gestión optimizada del talento humano docente y la preservación del patrimonio público destinado a becas.
+\end{itemize}
+
+\subsection{Impacto Social e Institucional}
+
+El proyecto genera un impacto institucional transformador al impulsar la digitalización eficiente de los procesos académicos de posgrado. Promueve el principio de transparencia en la administración de recursos universitarios, fomenta el cumplimiento de las leyes nacionales de educación superior y establece un precedente tecnológico de desarrollo propio dentro de la Facultad de Ingeniería y Ciencias Aplicadas de la Universidad Central del Ecuador.

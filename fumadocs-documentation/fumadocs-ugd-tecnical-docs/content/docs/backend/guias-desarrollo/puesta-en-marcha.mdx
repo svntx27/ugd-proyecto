@@ -1,0 +1,138 @@
+---
+title: Puesta en Marcha Local
+description: Guía paso a paso para configurar el entorno de desarrollo, sincronizar la base de datos Neon y ejecutar el backend UGD con Bun o Node.js.
+---
+
+Esta guía proporciona los pasos exactos y verificados para clonar, configurar y poner en marcha el backend de la **Unidad de Gestión de Doctorados (UGD)** en un entorno de desarrollo local.
+
+---
+
+## 1. Requisitos Previos
+
+Antes de comenzar, asegúrate de contar con las siguientes herramientas instaladas en tu sistema operativo:
+
+* **[Bun](https://bun.sh/)** v1.2+ (recomendado por velocidad de ejecución y compilación nativa de TypeScript) o **Node.js** v20+ con npm/pnpm.
+* **Git** para control de versiones.
+* Acceso a la instancia de base de datos en **Neon PostgreSQL** o una base de datos PostgreSQL 16+ local.
+
+---
+
+## 2. Paso a Paso para la Puesta en Marcha
+
+<Steps>
+<Step>
+### Clonar el Repositorio y Navegar a la Carpeta
+
+```bash
+cd D:\GitHub\Proyecto-Integrador\express-backend-api
+```
+</Step>
+
+<Step>
+### Instalar Dependencias
+
+Utiliza Bun para una instalación ultrarrápida:
+
+```bash
+bun install
+```
+
+*(Si utilizas Node.js, ejecuta `npm install`)*
+</Step>
+
+<Step>
+### Configurar Variables de Entorno (`.env`)
+
+Crea un archivo `.env` en la raíz de `express-backend-api`:
+
+```bash
+# Puerto de escucha del servidor
+PORT=3000
+
+# Cadena de conexión JDBC a Neon PostgreSQL (Ejemplo de formato con SSL obligatorio)
+DATABASE_URL="postgresql://<DB_USER>:<DB_PASSWORD>@<DB_HOST>:<PORT>/<DB_NAME>?sslmode=require"
+
+# Secreto criptográfico para firma de JWT (mínimo 64 caracteres en producción)
+JWT_SECRET="<TU_CLAVE_SECRETA_JWT_ALEATORIA_64_CHARS>"
+
+# Tiempo de vida del token
+JWT_EXPIRES_IN="24h"
+
+# Orígenes CORS permitidos
+CORS_ORIGIN="http://localhost:3000,http://localhost:4321,https://app.tu-dominio.edu.ec"
+```
+</Step>
+
+<Step>
+### Generar el Cliente de Prisma y Sincronizar Esquema
+
+Genera los tipos de TypeScript a partir de `schema.prisma` y empuja la estructura a la base de datos:
+
+```bash
+# Generar tipos de Prisma Client
+bun run db:generate
+
+# Sincronizar esquemas (16 modelos) con Neon DB
+bun run db:push
+```
+</Step>
+
+<Step>
+### Sembrar Datos Iniciales
+
+Carga los roles, permisos, usuarios administrativos y la nómina oficial de la UCE:
+
+```bash
+# Sembrado completo (sistema base + padrón oficial de 550+ doctorandos)
+bun run db:seed:all
+```
+</Step>
+
+<Step>
+### Iniciar el Servidor de Desarrollo
+
+Levanta el servidor con recarga en caliente (*hot-reload*):
+
+```bash
+bun run dev
+```
+
+La consola confirmará el inicio exitoso:
+```text
+🚀 API Express UGD ejecutándose en http://localhost:3000
+```
+</Step>
+</Steps>
+
+---
+
+## 3. Verificación de Funcionamiento (Health Check)
+
+Puedes validar que el servicio responde abriendo tu navegador o ejecutando un `curl`:
+
+```bash
+curl http://localhost:3000/health
+```
+
+Respuesta esperada:
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-03-25T15:00:00.000Z"
+}
+```
+
+---
+
+## 4. Scripts Disponibles en `package.json`
+
+| Comando | Descripción |
+| :--- | :--- |
+| `bun run dev` | Inicia el servidor con Hot Reloading (`bun --watch src/server.ts`). |
+| `bun run start` | Inicia el servidor en modo producción. |
+| `bun run db:generate` | Genera el cliente tipado de Prisma (`prisma generate`). |
+| `bun run db:push` | Aplica cambios del `schema.prisma` directamente a Neon PostgreSQL. |
+| `bun run db:studio` | Abre **Prisma Studio**, la interfaz visual interactiva en `http://localhost:5555`. |
+| `bun run db:seed` | Siembra roles, permisos RBAC, usuarios de prueba y representantes UGD. |
+| `bun run db:seed:doctorandos` | Siembra en lotes concurrentes la nómina oficial de doctorandos. |
+| `bun run db:seed:all` | Ejecuta la secuencia completa de sembrado (`seed` + `seed:doctorandos`). |

@@ -1,0 +1,9 @@
+{
+  "title": "Arquitectura y Fundamentos",
+  "pages": [
+    "stack",
+    "estructura-codigo",
+    "modelo-datos",
+    "seguridad-rbac"
+  ]
+}

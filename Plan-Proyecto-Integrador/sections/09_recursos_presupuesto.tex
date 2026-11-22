@@ -1,0 +1,148 @@
+% ==========================================
+% SECCIONES 12 Y 13: RECURSOS Y PRESUPUESTO
+% ==========================================
+
+\section{RECURSO HUMANO}
+
+El equipo del proyecto está conformado por los estudiantes postulantes en ciencias de la computación, con el acompañamiento técnico, la tutoría metodológica institucional y la contraparte operativa de la Unidad de Gestión de Doctorados (Tabla~\ref{tab:recurso_humano}).
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Distribución de roles y responsabilidades de recursos humanos.}
+    \label{tab:recurso_humano}
+    \begin{tabularx}{\linewidth}{>{\bfseries\raggedright\arraybackslash}p{2.8cm} >{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}X}
+        \toprule
+        \rowcolor{TableHeadBg}
+        \color{white}\textbf{Rol} & 
+        \color{white}\textbf{Nombre / Perfil} & 
+        \color{white}\textbf{Responsabilidad en el Proyecto} \\
+        \midrule
+        Desarrollador 1 & Tapia Rea Freddy Xavier & Modelado de BD relacional PostgreSQL, ORM Prisma, Backend API REST Express.js y especificación técnica de contratos de interfaz desacoplados (\textit{mock services}). \\
+        \rowcolor{TableAltRow}
+        Desarrollador 2 & Trujillo Vistin Dennis Adrian & Desarrollo Frontend: Panel Admin (Next.js 16/Bun), Portal Estudiantil (Astro/React: expedientes, citas, alertas) y documentación técnica en Fumadocs. \\
+        Director de Unidad / Tutor & Docente Tutor / Dirección de la Unidad & Dirección institucional y tutoría académica metodológica (rol de supervisión académica, sin participación en la muestra de evaluación empírica UAT). \\
+        \rowcolor{TableAltRow}
+        Analista de Procesos & Analista de Procesos Universitarios & Definición de requerimientos funcionales de becas, curaduría de formatos Excel y evaluación operativa independiente UAT ($N = 2$). \\
+        Analista Técnico & Analista Técnico de Sistemas & Definición de requerimientos técnicos, pruebas de seguridad RBAC y evaluación operativa independiente UAT ($N = 2$). \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{PRESUPUESTO}
+
+A continuación, se detalla la valoración presupuestaria integral y referencial del proyecto integrador para un horizonte temporal de 20 semanas (5 meses). Es importante precisar que las cifras presentadas constituyen una estimación económica y académica referencial del valor de mercado del software. Si bien para la entrega académica del prototipo y demostración pública se emplean plataformas en la nube gestionadas y recursos propios de los estudiantes para desligar de gastos inmediatos a la universidad, el presupuesto proyecta los costos comerciales reales que representaría una solución de nivel profesional, facilitando el análisis financiero en caso de que la institución decida contratar soporte o adoptar infraestructuras dedicadas en el futuro.
+
+\subsection{Presupuesto para gastos de personal}
+
+La estimación del valor del esfuerzo humano de desarrollo se calcula considerando una dedicación de 4 horas diarias durante 5 días a la semana (20 horas semanales por desarrollador, de lunes a viernes, perfectamente compatibles con las actividades académicas y de titulación de los estudiantes), a lo largo de las 20 semanas de duración del proyecto (5 meses). Esto representa un total de 400 horas de trabajo efectivo por cada uno de los dos estudiantes desarrolladores (800 horas hombre acumuladas). Para fines de costeo referencial, se establece una tarifa profesional estimada de \$7.00 USD por hora de desarrollo de software (Tabla~\ref{tab:presupuesto_personal}).
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Presupuesto referencial de valoración de horas de desarrollo (20 semanas, 20h/semana).}
+    \label{tab:presupuesto_personal}
+    \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X Y Y Y}
+        \toprule
+        \rowcolor{TableHeadBg}
+        \color{white}\textbf{Rol / Personal} & 
+        \color{white}\textbf{Horas Planificadas} & 
+        \color{white}\textbf{Costo/Hora (USD)} & 
+        \color{white}\textbf{Costo Total (USD)} \\
+        \midrule
+        Desarrollador 1 (Tapia Rea Freddy Xavier) & 400 & 7.00 & 2,800.00 \\
+        \rowcolor{TableAltRow}
+        Desarrollador 2 (Trujillo Vistin Dennis Adrian) & 400 & 7.00 & 2,800.00 \\
+        Tutoría de Proyecto (Docente Tutor) & 80 & 0.00 (Institucional) & 0.00 \\
+        \midrule
+        \rowcolor{UceBlueLight!20}
+        \textbf{SUBTOTAL VALORACIÓN PERSONAL} & \textbf{800} & \textbf{7.00} & \textbf{5,600.00} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Presupuesto para gasto de equipo tecnológico y software}
+
+La estimación tecnológica cuantifica el valor referencial de los equipos de cómputo utilizados y los costos comerciales de mercado que conllevaría contratar infraestructura en la nube dedicada (servidor de aplicaciones, base de datos gestionada con alta disponibilidad, dominio con certificados SSL y almacenamiento de respaldos). Aunque durante la fase de prototipo se emplean planes no arancelados y equipos propios para no generar costos a la universidad, se presenta esta valoración de mercado para fundamentar un eventual entorno de producción permanente (Tabla~\ref{tab:presupuesto_equipos}).
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Presupuesto estimado de hardware, software e infraestructura tecnológica en la nube.}
+    \label{tab:presupuesto_equipos}
+    \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X Y Y Y}
+        \toprule
+        \rowcolor{TableHeadBg}
+        \color{white}\textbf{Descripción del Recurso} & 
+        \color{white}\textbf{Cantidad} & 
+        \color{white}\textbf{Costo Unitario (USD)} & 
+        \color{white}\textbf{Costo Total (USD)} \\
+        \midrule
+        Laptops de desarrollo (Core i7 / 16GB RAM) & 2 & 600.00 & 1,200.00 \\
+        \rowcolor{TableAltRow}
+        Servidor Cloud PaaS para Backend y Frontend & 5 meses & 25.00 & 125.00 \\
+        Base de Datos Relacional PostgreSQL Gestionada Cloud & 5 meses & 20.00 & 100.00 \\
+        \rowcolor{TableAltRow}
+        Dominio Web y Certificados de Seguridad SSL/TLS & 1 año & 25.00 & 25.00 \\
+        Almacenamiento Cloud para Respaldos de Datos & 5 meses & 10.00 & 50.00 \\
+        \midrule
+        \rowcolor{UceBlueLight!20}
+        \textbf{SUBTOTAL EQUIPO TECNOLÓGICO Y SOFTWARE} & \textbf{--} & \textbf{--} & \textbf{1,500.00} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Presupuesto para gastos varios}
+
+La Tabla~\ref{tab:presupuesto_varios} resume los gastos operativos, conectividad y servicios de papelería proyectados para los 5 meses de desarrollo.
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Presupuesto estimado para gastos operativos (5 meses).}
+    \label{tab:presupuesto_varios}
+    \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X Y Y Y}
+        \toprule
+        \rowcolor{TableHeadBg}
+        \color{white}\textbf{Detalle de Gastos} & 
+        \color{white}\textbf{Cantidad} & 
+        \color{white}\textbf{Costo Unitario (USD)} & 
+        \color{white}\textbf{Costo Total (USD)} \\
+        \midrule
+        Internet de banda ancha (desarrollo) & 5 meses & 30.00 & 150.00 \\
+        \rowcolor{TableAltRow}
+        Suministros de oficina y materiales & Global & 40.00 & 40.00 \\
+        Impresión, anillado de borrador e informe final & Global & 30.00 & 30.00 \\
+        \midrule
+        \rowcolor{UceBlueLight!20}
+        \textbf{SUBTOTAL GASTOS VARIOS} & \textbf{--} & \textbf{--} & \textbf{220.00} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Presupuesto total}
+
+La Tabla~\ref{tab:presupuesto_total} consolida la valoración económica referencial del proyecto integrador bajo el esquema horario de 4 horas diarias (800 horas hombre acumuladas), alcanzando una valoración global de \$7,320.00 USD. Se reitera que este presupuesto constituye un costeo referencial de mercado y no un desembolso financiero exigido a la universidad.
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Consolidación del presupuesto referencial del proyecto integrador (esquema 4h/día).}
+    \label{tab:presupuesto_total}
+    \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X Y Y}
+        \toprule
+        \rowcolor{TableHeadBg}
+        \color{white}\textbf{Rubro General} & 
+        \color{white}\textbf{Monto Estimado (USD)} & 
+        \color{white}\textbf{Porcentaje (\%)} \\
+        \midrule
+        Valoración de Personal (800 horas a \$7.00/h) & 5,600.00 & 76.50\% \\
+        \rowcolor{TableAltRow}
+        Equipo Tecnológico, Cloud y Software & 1,500.00 & 20.49\% \\
+        Gastos Varios Operativos (Internet, Papelería) & 220.00 & 3.01\% \\
+        \midrule
+        \rowcolor{UceBlueLight!20}
+        \textbf{PRESUPUESTO TOTAL REFERENCIAL} & \textbf{7,320.00} & \textbf{100.00\%} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}

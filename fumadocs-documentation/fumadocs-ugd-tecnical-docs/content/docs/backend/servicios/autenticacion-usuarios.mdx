@@ -1,0 +1,236 @@
+---
+title: Autenticación y Usuarios
+description: Especificación completa de los endpoints de autenticación, verificación de nómina, activación de cuentas y administración de usuarios.
+---
+
+Este documento contiene la referencia técnica exhaustiva de los módulos de **Autenticación (`/api/auth`)** y **Gestión de Usuarios y Roles (`/api/users`)**.
+
+---
+
+## 1. Módulo de Autenticación (`/api/auth`)
+
+Soporta rutas con prefijo `/api/auth` y rutas directas `/auth`.
+
+### 1.1 Verificar Doctorando en Nómina
+
+<ApiEndpoint method="POST" path="/api/auth/verificar-doctorando" auth={false} />
+
+*Alias de compatibilidad:* `/api/auth/verify-doctorando`, `/auth/verificar-doctorando`
+
+Permite al frontend verificar de forma no destructiva si un estudiante consta en el padrón oficial de la UGD antes de solicitarle que defina una contraseña.
+
+<ParamTable title="Cuerpo de la Petición (Request Body)">
+  <ParamField name="cedula" type="string" required={true}>
+    Número de cédula de identidad del doctorando.
+  </ParamField>
+  <ParamField name="correo" type="string" required={true}>
+    Correo electrónico institucional del doctorando (`@uce.edu.ec`).
+  </ParamField>
+</ParamTable>
+
+#### Respuesta Exitosa (`200 OK` - Listo para activación)
+```json
+{
+  "valid": true,
+  "alreadyActivated": false,
+  "message": "Estudiante doctorando verificado exitosamente y listo para activación.",
+  "doctorando": {
+    "id": "doc_sample_1",
+    "cedula": "1700000001",
+    "nombres": "Estudiante",
+    "apellidos": "Doctorando",
+    "nombreCompleto": "Estudiante Doctorando de Ejemplo",
+    "correoInstitucional": "doctorando.ejemplo@uce.edu.ec",
+    "facultad": "Facultad de Ingeniería y Ciencias Aplicadas",
+    "carrera": "Carrera de Ingeniería en Computación"
+  }
+}
+```
+
+#### Respuestas de Error
+- `400 Bad Request`: Si no se proveen `cedula` o `correo`.
+- `404 Not Found`: Si la cédula o correo no constan en la nómina oficial.
+- `409 Conflict`: Si el doctorando ya activó su cuenta previamente (`alreadyActivated: true`).
+
+---
+
+### 1.2 Activar Cuenta de Doctorando
+
+<ApiEndpoint method="POST" path="/api/auth/activar-cuenta" auth={false} />
+
+*Alias de compatibilidad:* `/api/auth/activate`, `/auth/activar-cuenta`
+
+Crea el usuario con rol `ESTUDIANTE`, hashea la contraseña y vincula el registro del doctorando con la cuenta creada en una única transacción atómica.
+
+<ParamTable title="Cuerpo de la Petición (Request Body)">
+  <ParamField name="cedula" type="string" required={true}>
+    Cédula de identidad registrada en la nómina.
+  </ParamField>
+  <ParamField name="correo" type="string" required={true}>
+    Correo institucional `@uce.edu.ec` registrado en la nómina.
+  </ParamField>
+  <ParamField name="password" type="string" required={true}>
+    Contraseña elegida por el usuario (mínimo 6 caracteres).
+  </ParamField>
+</ParamTable>
+
+#### Respuesta Exitosa (`201 Created`)
+```json
+{
+  "message": "Cuenta institucional activada con éxito. Ya puedes iniciar sesión.",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "u_sample_987",
+    "name": "Estudiante Doctorando de Ejemplo",
+    "email": "doctorando.ejemplo@uce.edu.ec",
+    "userType": "Estudiante",
+    "role": "ESTUDIANTE"
+  },
+  "doctorando": {
+    "id": "doc_sample_1",
+    "cedula": "1700000001",
+    "facultad": "Facultad de Ingeniería y Ciencias Aplicadas"
+  }
+}
+```
+
+---
+
+### 1.3 Iniciar Sesión General
+
+<ApiEndpoint method="POST" path="/api/auth/login" auth={false} />
+
+*Alias de compatibilidad:* `/auth/login`
+
+Autentica a cualquier usuario del sistema (estudiante doctorando o personal administrativo). Retorna el token JWT, el rol y la ficha académica completa si el usuario es doctorando.
+
+<ParamTable title="Cuerpo de la Petición">
+  <ParamField name="email" type="string" required={true}>
+    Correo institucional registrado.
+  </ParamField>
+  <ParamField name="password" type="string" required={true}>
+    Contraseña en texto plano.
+  </ParamField>
+</ParamTable>
+
+#### Respuesta Exitosa (`200 OK`)
+```json
+{
+  "message": "Inicio de sesión exitoso",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "role": "student",
+  "role_code": "ESTUDIANTE",
+  "full_name": "Estudiante Doctorando de Ejemplo",
+  "user": {
+    "id": "u_sample_987",
+    "name": "Estudiante Doctorando de Ejemplo",
+    "email": "doctorando.ejemplo@uce.edu.ec",
+    "userType": "Estudiante",
+    "role": {
+      "id": "r_estudiante",
+      "code": "ESTUDIANTE",
+      "name": "Estudiante Doctorando"
+    },
+    "permissions": ["PROCESOS_VER", "ESTUDIANTES_VER"],
+    "doctorando": {
+      "id": "doc_sample_1",
+      "cedula": "1700000001",
+      "facultad": "Facultad de Ingeniería y Ciencias Aplicadas",
+      "carrera": "Carrera de Ingeniería en Computación"
+    }
+  }
+}
+```
+
+---
+
+### 1.4 Inicio de Sesión Administrativo
+
+<ApiEndpoint method="POST" path="/api/auth/admin-login" auth={false} />
+
+*Alias de compatibilidad:* `/auth/admin-login`
+
+Autentica exclusivamente a usuarios con roles administrativos (`DESARROLLADOR`, `DIRECTOR`, `ANALISTA_PROCESOS`, `ANALISTA_TECNICO`). Si un usuario con rol `ESTUDIANTE` intenta autenticarse por esta vía, la petición es rechazada con código `403 Forbidden`.
+
+---
+
+### 1.5 Registro General de Estudiante
+
+<ApiEndpoint method="POST" path="/api/auth/register" auth={false} />
+
+*Alias de compatibilidad:* `/auth/register`
+
+Permite el auto-registro manual de estudiantes en caso de no utilizar el flujo de activación de nómina preexistente.
+
+<ParamTable title="Cuerpo de la Petición">
+  <ParamField name="name" type="string" required={true}>Nombre completo.</ParamField>
+  <ParamField name="email" type="string" required={true}>Correo institucional único.</ParamField>
+  <ParamField name="password" type="string" required={true}>Contraseña.</ParamField>
+</ParamTable>
+
+---
+
+### 1.6 Perfil 360° del Usuario Actual
+
+<ApiEndpoint method="GET" path="/api/auth/me" auth="Bearer JWT" />
+
+*Alias de compatibilidad:* `/auth/me`
+
+Devuelve en tiempo real los datos del usuario conectado, su rol, la lista actualizada de permisos concedidos y su expediente doctoral vinculado.
+
+---
+
+## 2. Módulo de Gestión de Usuarios (`/api/users`)
+
+Soporta rutas con prefijo `/api/users` y rutas directas `/users`.
+
+### 2.1 Listar Todos los Usuarios
+
+<ApiEndpoint method="GET" path="/api/users" auth="Bearer JWT" role="USUARIOS_VER" />
+
+Retorna la lista de cuentas de usuario ordenadas cronológicamente, incluyendo su rol y la información resumida de su ficha doctoral (si existe).
+
+#### Respuesta Exitosa (`200 OK`)
+```json
+[
+  {
+    "id": "u_sample_1",
+    "name": "Administrador Principal",
+    "email": "admin.dev@uce.edu.ec",
+    "userType": "Personal técnico",
+    "isActive": true,
+    "createdAt": "2026-03-01T10:00:00.000Z",
+    "role": {
+      "id": "r_dev",
+      "code": "DESARROLLADOR",
+      "name": "Desarrollador"
+    },
+    "doctorando": null
+  }
+]
+```
+
+---
+
+### 2.2 Modificar Estado o Nombre de Usuario
+
+<ApiEndpoint method="PUT" path="/api/users/:id" auth="Bearer JWT" role="USUARIOS_EDITAR" />
+
+Permite a los administradores actualizar el nombre o activar/desactivar (`isActive: false`) una cuenta de usuario.
+
+<Callout type="warn" title="Protección de Cuentas de Desarrollador">
+  El controlador protege las cuentas con rol `DESARROLLADOR` o correo maestro configurado impidiendo su desactivación accidental.
+</Callout>
+
+<ParamTable title="Cuerpo de la Petición">
+  <ParamField name="name" type="string" required={false}>Nuevo nombre del usuario.</ParamField>
+  <ParamField name="isActive" type="boolean" required={false}>Estado activo (`true`) o inactivo (`false`).</ParamField>
+</ParamTable>
+
+---
+
+### 2.3 Listar Roles y Matriz de Permisos
+
+<ApiEndpoint method="GET" path="/api/users/roles" auth="Bearer JWT" role="USUARIOS_VER" />
+
+Retorna el catálogo completo de roles del sistema y los permisos asignados a cada uno a través de la tabla relacional `role_permissions`.

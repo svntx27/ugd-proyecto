@@ -1,0 +1,111 @@
+% ==========================================
+% SECCIÓN 8: MARCO TEÓRICO Y LEGAL
+% ==========================================
+
+\section{MARCO TEÓRICO Y LEGAL}
+
+El desarrollo conceptual y técnico del Sistema de Gestión de Doctorados (SGD) se fundamenta en un marco multidisciplinario que articula teorías de ingeniería de software, patrones de diseño de arquitectura desacoplada, modelos de bases de datos relacionales, marcos de usabilidad de interfaz y la legislación normativa vigente en la Educación Superior del Ecuador.
+
+\subsection{Red de Contenidos y Fundamentos Conceptuales}
+
+El soporte teórico del proyecto integrador articula la ingeniería de software y la administración pública universitaria en una red conceptual coherente, estableciendo la relación analítica y causal entre la variable independiente y la variable dependiente que sustentan la investigación:
+
+\begin{enumerate}[label=\textbf{Eje \arabic*:},leftmargin=*]
+    \item \textbf{Variable Independiente: Plataforma Web Modular SGD y Servicios Desacoplados.} Comprende la solución tecnológica estructurada en tres dimensiones conceptuales interconectadas:
+    \begin{itemize}[leftmargin=*,noitemsep]
+        \item \textit{Dimensión 1: Panel Administrativo (Gestión sin Excel):} Interfaces administrativas centralizadas implementadas en Next.js 16 con React 19 y empaquetadas con Bun \cite{vercel_nextjs}. Se fundamenta en patrones de renderizado del lado del servidor (SSR) y gestión de estado reactivo ligero con Zustand, orientados a sustituir definitivamente el almacenamiento fragmentado en hojas de cálculo locales de Microsoft Excel, permitiendo al personal de la Unidad gestionar programas doctorales, expedientes y la agenda de citas bajo control de acceso RBAC \cite{ferraiolo_rbac}.
+        \item \textit{Dimensión 2: Portal Estudiantil y Reservas en Tiempo Real:} Paradigma de Arquitectura de Islas en Astro y React \cite{astro_docs}, enfocado en una carga ultrarrápida y mínimo consumo de scripts para autoservicio estudiantil. Esta dimensión conceptualiza la transparencia informativa del expediente (permitiendo a los docentes becarios conocer en todo momento qué documentos tienen formalmente entregados y cuáles requisitos tienen pendientes) y el motor de agendamiento de citas en tiempo real con el personal de la Unidad para recibir atención personalizada, evitando visitas físicas espontáneas e interrupciones laborales en la oficina.
+        \item \textit{Dimensión 3: API REST y Persistencia Relacional:} Patrón de servicios web RESTful centralizados desarrollados en Express.js \cite{fielding_rest}, \cite{express_docs}, con modelado relacional en tercera forma normal (3FN) mediante PostgreSQL \cite{silberschatz} y mapeo tipado con Prisma ORM \cite{prisma_docs}. Incorpora contratos de interfaz desacoplados (\textit{mock services}) para desacoplar la demo de la red interna de la DTICs.
+    \end{itemize}
+    
+    \item \textbf{Variable Dependiente: Eficiencia Administrativa, Autonomía Estudiantil y Conformidad.} Evalúa el impacto institucional generado por la implementación de la plataforma a través de tres dimensiones operacionales:
+    \begin{itemize}[leftmargin=*,noitemsep]
+        \item \textit{Dimensión 1: Gestión Centralizada de Doctorados y Expedientes:} Mitigación de errores humanos, supresión del descontrol de versiones en archivos Excel dispersos, emisión instantánea de certificados digitales de estado de beca y cálculo automatizado de plazos y devengamientos conforme al marco de la LOES y el Reglamento UCE \cite{loes}, \cite{reglamento_uce}.
+        \item \textit{Dimensión 2: Autonomía Informativa y Gestión de Citas:} Empoderamiento de los docentes becarios al eliminar la incertidumbre sobre el estado de sus trámites mediante el visor de requisitos entregados y pendientes, y optimización de la atención presencial a través de citas en línea previamente agendadas y sincronizadas, reduciendo drásticamente las consultas presenciales repetitivas e imprevistas.
+        \item \textit{Dimensión 3: Conformidad de Requerimientos de la Unidad:} Grado de cumplimiento funcional y operativo del prototipo medido mediante sesiones de pruebas de aceptación (\textit{User Acceptance Testing} - UAT), evaluadas de manera independiente por los analistas técnicos de la Unidad ($N = 2$) sobre un banco de pruebas sintético con perfiles ficticios bajo la LOPDP \cite{lopdp_ecuador}, estableciéndose una tasa de completitud funcional igual o superior al 90\% ($\ge 90\%$) como criterio de éxito y aceptación formal \cite{ieee_requirements}.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Definición y Operacionalización de Variables}
+
+Para evaluar de manera empírica el impacto funcional de la propuesta tecnológica, se definen conceptual y operacionalmente las variables del estudio en la Tabla~\ref{tab:operacionalizacion}, guardando estricta correspondencia con los ejes teóricos y dimensiones conceptuales descritas previamente.
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Matriz de operacionalización de variables del proyecto integrador.}
+    \label{tab:operacionalizacion}
+    \begin{tabularx}{\linewidth}{>{\bfseries\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+        \toprule
+        \rowcolor{TableHeadBg}
+        \color{white}\textbf{Variable} & 
+        \color{white}\textbf{Definición Conceptual} & 
+        \color{white}\textbf{Dimensiones} & 
+        \color{white}\textbf{Indicadores / Escala} \\
+        \midrule
+        Variable Independiente:\newline Plataforma Web Modular SGD y Servicios Desacoplados & 
+        Sistema de software web modular (Next.js 16, Astro, Express.js, Prisma ORM) con panel administrativo sin Excel, portal estudiantil con visor de requisitos y reservas de citas, y control de acceso RBAC \cite{fowler}, \cite{vercel_nextjs}, \cite{express_docs}. & 
+        \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt,partopsep=0pt,parsep=0pt]
+            \item Panel Administrativo (Gestión sin Excel)
+            \item Portal Estudiantil y Reservas en Tiempo Real
+            \item API REST y Persistencia Relacional
+        \end{itemize} & 
+        \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt,partopsep=0pt,parsep=0pt]
+            \item Tiempo de respuesta de endpoints (ms)
+            \item \% Permisos de acceso RBAC validados
+            \item \% Citas en línea agendadas y sincronizadas con éxito
+        \end{itemize} \\
+        \rowcolor{TableAltRow}
+        Variable Dependiente:\newline Eficiencia Administrativa, Autonomía Estudiantil y Conformidad & 
+        Gestión centralizada de programas de doctorado, erradicación de hojas de cálculo, autonomía en la consulta de expedientes, atención ordenada por citas y conformidad institucional \cite{loes}, \cite{reglamento_uce}, \cite{ieee_requirements}. & 
+        \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt,partopsep=0pt,parsep=0pt]
+            \item Gestión de doctorados y expedientes
+            \item Autonomía informativa y gestión de citas
+            \item Conformidad de requerimientos de la Unidad
+        \end{itemize} & 
+        \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt,partopsep=0pt,parsep=0pt]
+            \item \% Reducción de consultas presenciales repetitivas
+            \item \% Casos de prueba calculados con éxito (Meta: 100\%)
+            \item \% Completitud de requerimientos validados (Meta $\ge 90$\%)
+        \end{itemize} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Fundamentación Tecnológica y Patrones de Arquitectura}
+
+\subsubsection{Arquitectura Web Desacoplada y Patrones de Diseño (Next.js 16, React 19 y Astro)}
+
+El diseño de la plataforma se ampara en los principios de arquitectura limpia (\textit{Clean Architecture}) y separación de responsabilidades proponiendo componentes independientes que facilitan el mantenimiento del software \cite{martin_clean}, \cite{gamma_patterns}. Para el \textbf{Panel Administrativo}, la adopción de \textbf{Next.js 16 y React 19} introduce capacidades de renderizado híbrido del lado del servidor (SSR) mediante \textit{Server Components} \cite{vercel_nextjs}. Este modelo permite procesar transacciones complejas directamente en el servidor, blindando la lógica de negocio y las credenciales de la base de datos contra accesos no autorizados. A través de este panel, el personal de la Unidad gestiona de forma integral y centralizada todos los programas doctorales, el estado de los expedientes estudiantiles y la agenda de citas, eliminando definitivamente las hojas de cálculo locales de Excel.
+
+Para el \textbf{Portal Estudiantil}, se adopta \textbf{Astro} junto con \textbf{React} bajo la \textit{Islands Architecture} (Arquitectura de Islas) \cite{astro_docs}, \cite{banks_react}. Este paradigma aísla los componentes interactivos (\textit{islas}) dentro de un documento HTML estático generado previamente. Al eliminar la carga innecesaria de scripts de JavaScript en el cliente, se garantiza que los docentes becarios dispongan de una interfaz con tiempos de renderizado ultrarrápidos y un consumo óptimo de datos en navegadores móviles. En este portal, los estudiantes pueden acceder a una visión integral y transparente de su expediente (conociendo con exactitud qué documentos tienen entregados y qué requisitos tienen pendientes), interactuar con el sistema de reservas de citas en tiempo real para coordinar reuniones con los miembros de la Unidad, y tramitar solicitudes sin requerir traslados físicos a la oficina.
+
+\subsubsection{Gestión de Estado, Estilos y Usabilidad de Interfaz}
+
+La experiencia de usuario y la maquetación visual se rigen por estándares contemporáneos de diseño web responsivo e ingeniería de usabilidad \cite{nielsen_usability}. El manejo del estado global de la aplicación se resuelve mediante \textbf{Zustand}, una biblioteca reactiva de bajo consumo que elimina la complejidad y redundancia de patrones tradicionales como Redux. La capa estética se construye utilizando \textbf{TailwindCSS} \cite{tailwind_docs} complementada con la librería \textbf{Lucide Icons}, garantizando una interfaz coherente con la identidad institucional de la UCE. Para optimizar el proceso de adopción tecnológica, se incorpora \textbf{Driver.js}, herramienta que genera guías interactivas sobre la misma pantalla (\textit{onboarding}) para orientar al Director de la Unidad, a los Analistas de Procesos y a los Becarios sin requerir extensas capacitaciones presenciales. Finalmente, el empaquetado del proyecto se apoya en el ejecutor \textbf{Bun}, acelerando el tiempo de compilación y la resolución de paquetes.
+
+\subsubsection{Servicios API REST Backend (Express.js), Mapeo Relacional (Prisma ORM) y Seguridad RBAC}
+
+El desacoplamiento de capas se logra implementando un servidor Backend en \textbf{Express.js} \cite{express_docs} concebido bajo una arquitectura modular desacoplada encargada de exponer servicios API RESTful centralizados \cite{fielding_rest}, \cite{newman_microservices}. La capa de almacenamiento y persistencia descansa sobre el motor relacional \textbf{PostgreSQL} \cite{postgresql_docs}, modelado en tercera forma normal para evitar redundancias \cite{elmasri}, \cite{silberschatz}. La interacción entre el código TypeScript y la base de datos se realiza a través de \textbf{Prisma ORM} \cite{prisma_docs}, asegurando tipado estático nativo, protección contra inyecciones SQL y un control estricto de migraciones.
+
+La seguridad del sistema adopta el modelo de Control de Acceso Basado en Roles (RBAC) \cite{ferraiolo_rbac}, definiendo políticas de autorización diferenciadas para el Director de la Unidad, la Analista de Procesos Universitarios y el Analista Técnico. El intercambio seguro de datos entre el Frontend y el Backend se autentica mediante tokens firmados digitalmente JWT (\textit{JSON Web Tokens}) \cite{rfc_jwt}, siguiendo las recomendaciones de seguridad informática del consorcio OWASP \cite{owasp_top10}.
+
+\subsubsection{Portal Estudiantil: Estado de Expedientes, Reservas de Citas en Tiempo Real, Solicitudes y Alertas}
+
+El Portal Estudiantil centraliza los servicios de mayor impacto para el docente becario a través de cuatro componentes clave:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Visor de Estado de Expediente y Requisitos:} Módulo visual donde el estudiante consulta con total claridad el estado de su proceso doctoral, verificando qué documentos y requisitos han sido formalmente recibidos y validados por la Unidad, y cuáles se encuentran pendientes de entrega. Esta transparencia informativa erradica la necesidad de realizar visitas presenciales recurrentes a la oficina de la Unidad solo para preguntar por el estado de sus trámites.
+    \item \textbf{Sistema de Reservas y Agendamiento de Citas en Tiempo Real:} Mecanismo interactivo que permite al estudiante programar citas presenciales o virtuales con cualquier funcionario de la Unidad (Director de la Unidad, Analista de Procesos Universitarios o Analista Técnico) para recibir atención o asesoría personalizada. El sistema administra la disponibilidad horaria en tiempo real evitando cruces de agenda y largas filas de espera.
+    \item \textbf{Módulo de Solicitudes y Tickets:} Permite radicar peticiones formales (prórrogas, adendas, revisiones) con seguimiento de estados en tiempo real y trazabilidad completa.
+    \item \textbf{Motor de Alertas y Certificados Digitales:} Notifica oportunamente sobre fechas límite y permite la descarga instantánea de certificados oficiales de estado de beca. El motor de alertas adopta un modelo híbrido: (a) disparo programado externo desacoplado (\textit{Vercel Cron} o \textit{GitHub Actions}) para invocar periódicamente el endpoint de escaneo despertando la instancia en caso de reposo; y (b) evaluación reactiva bajo demanda al interactuar con el sistema.
+\end{itemize}
+
+Por su parte, la sostenibilidad y transferibilidad del sistema se respalda en \textbf{Fumadocs} \cite{fumadocs_docs}, herramienta basada en Next.js y MDX que genera dos centros de documentación interactivos: el Manual de Usuario para el personal de la Unidad y la Guía Técnica de Arquitectura y Despliegue para el equipo de desarrollo de la universidad.
+
+\subsection{Marco Legal y Principios Éticos Institucionales}
+
+La validez jurídica y administrativa del proyecto SGD se encuentra supeditada a las leyes nacionales y reglamentos universitarios vigentes:
+
+En primer lugar, la \textbf{Ley Orgánica de Educación Superior (LOES)} establece los derechos, deberes y garantías de los docentes titulares para acceder a licencias con remuneración y programas de becas doctorales \cite{loes}. En segundo lugar, el \textbf{Reglamento de Régimen Académico de la UCE} fija las fórmulas legales para el cálculo de periodos de devengamiento y los requisitos formales para la concesión de adendas y prórrogas \cite{reglamento_uce}.
+
+En tercer lugar, la \textbf{Ley Orgánica de Protección de Datos Personales del Ecuador (LOPDP)} ampara los derechos de confidencialidad, privacidad y consentimiento informado de la información docente \cite{lopdp_ecuador}. Finalmente, el marco ético se alinea con los \textbf{Instructivos del Trabajo de Titulación de la UCE} \cite{instructivo_titulacion}, garantizando la transparencia, trazabilidad de datos y la autoría intelectual original del software.

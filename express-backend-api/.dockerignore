@@ -1,0 +1,11 @@
+node_modules
+.env
+.env.local
+.env.example
+.git
+.github
+logs
+dist
+out
+*.log
+README.md

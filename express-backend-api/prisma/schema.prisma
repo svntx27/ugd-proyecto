@@ -1,0 +1,278 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id              String           @id @default(uuid())
+  code            String           @unique // DESARROLLADOR, DIRECTOR, ANALISTA_PROCESOS, ANALISTA_TECNICO, ESTUDIANTE
+  name            String
+  description     String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  users           User[]
+  rolePermissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id              String           @id @default(uuid())
+  code            String           @unique // e.g. USUARIOS_VER, PROCESOS_CREAR
+  name            String
+  description     String?
+  category        String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  rolePermissions RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  assignedAt   DateTime   @default(now())
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model User {
+  id          String        @id @default(uuid())
+  name        String
+  userType    String        // Personal UGD, Estudiante, Personal técnico
+  email       String        @unique
+  password    String        // Hashed with bcrypt
+  isActive    Boolean       @default(true)
+  roleId      String
+  role        Role          @relation(fields: [roleId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  appointments   Appointment[]
+  doctorando     Doctorando?
+  representative Representative?
+
+  @@map("users")
+}
+
+model Representative {
+  id           Int           @id @default(autoincrement())
+  name         String        // Nombre del Representante UGD
+  title        String        @default("Analista UGD") // Cargo / Rol
+  location     String        @default("Unidad de Gestión de Doctorados")
+  capacity     Int           @default(1)
+  status       String        @default("activo") // "activo" | "inactivo"
+  userId       String?       @unique
+  user         User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  appointments Appointment[]
+
+  @@map("representatives")
+}
+
+model Appointment {
+  id               Int            @id @default(autoincrement())
+  representativeId Int
+  userId           String
+  date             String         // "YYYY-MM-DD"
+  startTime        String         @default("08:00") // "08:00", "08:30", ..., "15:30"
+  startHour        Int            @default(8)
+  subject          String         // Motivo de la Cita Presencial
+  status           String         @default("activa") // "activa" | "cancelada"
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  representative   Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([representativeId, date, startTime])
+  @@map("appointments")
+}
+
+model SystemSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("system_settings")
+}
+
+// =========================================================================
+// MODELOS DEL DOMINIO ACADÉMICO UGD (Fuente: Hoja 'VIGENTE' - Excel 2026)
+// =========================================================================
+
+model Facultad {
+  id          String       @id @default(uuid())
+  nombre      String       @unique
+  codigo      String?      @unique
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  carreras    Carrera[]
+  doctorandos Doctorando[]
+
+  @@map("facultades")
+}
+
+model Carrera {
+  id          String       @id @default(uuid())
+  nombre      String
+  facultadId  String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  facultad    Facultad     @relation(fields: [facultadId], references: [id], onDelete: Cascade)
+  doctorandos Doctorando[]
+
+  @@unique([facultadId, nombre])
+  @@map("carreras")
+}
+
+model InstitucionDestino {
+  id        String             @id @default(uuid())
+  nombre    String             @unique
+  pais      String
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  programas ProgramaDoctoral[]
+  convenios Convenio[]
+
+  @@map("instituciones_destino")
+}
+
+model ProgramaDoctoral {
+  id                   String               @id @default(uuid())
+  nombre               String
+  tituloAObtener       String?
+  institucionDestinoId String
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  institucionDestino   InstitucionDestino   @relation(fields: [institucionDestinoId], references: [id], onDelete: Cascade)
+  expedientes          ExpedienteDoctoral[]
+
+  @@unique([institucionDestinoId, nombre])
+  @@map("programas_doctorales")
+}
+
+model Convenio {
+  id                   String               @id @default(uuid())
+  nombre               String               @unique
+  fechaInicio          DateTime?
+  fechaFin             DateTime?
+  institucionDestinoId String?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  institucionDestino   InstitucionDestino?  @relation(fields: [institucionDestinoId], references: [id], onDelete: SetNull)
+  expedientes          ExpedienteDoctoral[]
+
+  @@map("convenios")
+}
+
+model Doctorando {
+  id                  String               @id @default(uuid())
+  carpeta             String?              // Código de carpeta física (ej. "1", "14.2", "Sin Carpeta")
+  numeroOrden         Int?                 // N° ordinal en nómina
+  cedula              String               @unique
+  apellidos           String
+  nombres             String
+  sexo                String?              // "H" | "M"
+  fechaNacimiento     DateTime?
+  correoInstitucional String               @unique
+  telefono            String?
+  tituloTercerNivel   String?
+  tituloCuartoNivel   String?
+  facultadId          String?
+  carreraId           String?
+  userId              String?              @unique
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  facultad            Facultad?            @relation(fields: [facultadId], references: [id], onDelete: SetNull)
+  carrera             Carrera?             @relation(fields: [carreraId], references: [id], onDelete: SetNull)
+  user                User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
+  expedientes         ExpedienteDoctoral[]
+
+  @@index([apellidos, nombres])
+  @@index([facultadId])
+  @@map("doctorandos")
+}
+
+model ExpedienteDoctoral {
+  id                     String           @id @default(uuid())
+  doctorandoId           String
+  programaDoctoralId     String
+  convenioId             String?
+  tituloInvestigacion    String?          // Tema de tesis doctoral
+  oficioRegistroProyecto String?
+  fechaOficioRegistro    DateTime?
+  tipoFinanciamiento     String           @default("Beca")
+  tieneApoyoProyecto     Boolean          @default(false)
+  contratoInicio         DateTime?
+  contratoFin            DateTime?
+  contratoMeses          Float?
+  estado                 String           @default("EN_ESTUDIOS") // "EN_ESTUDIOS" | "GRADUADO" | "EN_DEVENGAMIENTO" | "DEVENGADO" | "EN_COBRO" | "DESTITUIDO" | "RENUNCIA" | "SUSPENDIDO"
+  observaciones          String?
+  tieneAlertaLegal       Boolean          @default(false)         // Flag de proceso legal/sanción/cobro
+  historialInformes      String?
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
+
+  doctorando             Doctorando       @relation(fields: [doctorandoId], references: [id], onDelete: Cascade)
+  programaDoctoral       ProgramaDoctoral @relation(fields: [programaDoctoralId], references: [id], onDelete: Cascade)
+  convenio               Convenio?        @relation(fields: [convenioId], references: [id], onDelete: SetNull)
+  adendas                AdendaContrato[]
+  devengamiento          Devengamiento?
+
+  @@index([doctorandoId])
+  @@index([programaDoctoralId])
+  @@index([estado])
+  @@map("expedientes_doctorales")
+}
+
+model AdendaContrato {
+  id               String             @id @default(uuid())
+  expedienteId     String
+  numeroAdenda     Int                // 1, 2, 3, 4, 5
+  fechaInicio      DateTime?
+  fechaFin         DateTime?
+  meses            Float?
+  tipoModificacion String?            // "Ampliación", "Suspensión", "Culminación"
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  expediente       ExpedienteDoctoral @relation(fields: [expedienteId], references: [id], onDelete: Cascade)
+
+  @@unique([expedienteId, numeroAdenda])
+  @@map("adendas_contrato")
+}
+
+model Devengamiento {
+  id                    String             @id @default(uuid())
+  expedienteId          String             @unique
+  fechaInicio           DateTime?
+  tiempoTexto           String?            // ej. "7 años, 8 meses, 28 días"
+  fechaFinEstimada      DateTime?
+  oficioNotificacion    String?
+  oficioActaTerminacion String?
+  oficioCierreProyecto  String?
+  registroSenescyt      String?
+  estado                String             @default("PENDIENTE") // "PENDIENTE" | "EN_CURSO" | "FINALIZADO"
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+
+  expediente            ExpedienteDoctoral @relation(fields: [expedienteId], references: [id], onDelete: Cascade)
+
+  @@index([registroSenescyt])
+  @@map("devengamientos")
+}

@@ -1,0 +1,64 @@
+% ==========================================
+% SECCIONES 10 Y 11: CRONOGRAMA Y PLANIFICACIÓN
+% ==========================================
+
+\section{CRONOGRAMA DE EJECUCIÓN}
+
+La ejecución del presente trabajo de titulación se planifica para desarrollarse de forma rigurosa en un periodo continuo de 20 semanas ordinarias (equivalentes a 5 meses calendario de actividad académica). Esta distribución temporal garantiza el cumplimiento ordenado de cada una de las fases del ciclo de vida de desarrollo de software, abarcando desde la recolección inicial de requerimientos operacionales y homologación del banco de datos de prueba hasta el despliegue de la demo en la nube, validación de requerimientos con la Unidad y entrega de manuales interactivos.
+
+A continuación, la Tabla~\ref{tab:cronograma} sintetiza la matriz de planificación temporal por meses y semanas de trabajo programadas para la consecución del proyecto integrador.
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Cronograma general de actividades en 20 semanas (5 meses).}
+    \label{tab:cronograma}
+    \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X Y Y Y Y Y}
+        \toprule
+        \rowcolor{TableHeadBg}
+        \color{white}\textbf{Fase / Actividad} & 
+        \color{white}\textbf{Mes 1 (S1-S4)} & 
+        \color{white}\textbf{Mes 2 (S5-S8)} & 
+        \color{white}\textbf{Mes 3 (S9-S12)} & 
+        \color{white}\textbf{Mes 4 (S13-S16)} & 
+        \color{white}\textbf{Mes 5 (S17-S20)} \\
+        \midrule
+        1. Análisis de Esquemas, Datos Sintéticos y Requisitos & X & & & & \\
+        \rowcolor{TableAltRow}
+        2. Diseño Arquitectura, BD Prisma y Mockups UI & & X & & & \\
+        3. Desarrollo Backend REST, Pruebas Unitarias y Admin (Next 16) & & & X & X & \\
+        \rowcolor{TableAltRow}
+        4. Portal Estudiantil (Astro), Reservas de Citas y Alertas & & & & X & X \\
+        5. Despliegue Cloud, Documentación Fumadocs y Cierre & & & & & X \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{PLANIFICACIÓN DETALLADA DEL CICLO DE VIDA}
+
+Para asegurar la trazabilidad metodológica del desarrollo del SGD y verificar el avance continuo de los componentes tecnológicos, se establece una planificación estructurada que vincula de manera explícita cada etapa con sus actividades operativas principales y sus respectivos productos entregables verificables (Tabla~\ref{tab:planificacion}).
+
+Esta matriz de control permite supervisar la transición sistemática entre la homologación del banco de datos técnicos, la construcción de la capa relacional en PostgreSQL mediante Prisma ORM, la codificación de los subsistemas en Next.js 16 y Astro, el despliegue de la demostración en la nube (Vercel y Render) y la entrega de los centros de documentación en Fumadocs.
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Planificación detallada del ciclo de vida de desarrollo del SGD (20 semanas).}
+    \label{tab:planificacion}
+    \begin{tabularx}{\linewidth}{>{\bfseries\raggedright\arraybackslash}p{2.8cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+        \toprule
+        \rowcolor{TableHeadBg}
+        \color{white}\textbf{Fase de Desarrollo} & 
+        \color{white}\textbf{Actividades Principales} & 
+        \color{white}\textbf{Entregable Verificable} \\
+        \midrule
+        1. Análisis y Requisitos (Mes 1) & Análisis de formatos Excel oficiales, generación de banco de datos sintéticos con perfiles ficticios y entrevistas cualitativas con el personal de la Unidad. & Documento de Especificación de Requisitos y Banco de expedientes sintéticos con perfiles ficticios de prueba. \\
+        \rowcolor{TableAltRow}
+        2. Diseño de Arquitectura (Mes 2) & Modelado relacional PostgreSQL, esquema declarativo Prisma ORM, contratos de interfaz desacoplados y maquetación TailwindCSS. & Esquema relacional Prisma normalizado y Mockups de interfaz aprobados. \\
+        3. Backend, Admin y Pruebas (Meses 3-4) & Desarrollo de API REST Express.js con tokens JWT firmados, pruebas unitarias automatizadas (Jest), controles de seguridad OWASP y Frontend Admin (Next.js 16). & Repositorio de la API REST con suite de pruebas unitarias y Panel Administrativo operativo. \\
+        \rowcolor{TableAltRow}
+        4. Portal y Reservas (Meses 4-5) & Desarrollo de Portal Estudiantil en Astro + React, visor de estado de expediente (documentos entregados y faltantes), sistema de reservas de citas en tiempo real, solicitudes y alertas. & Repositorio del Portal Estudiantil, Sistema de Reservas de Citas en Tiempo Real y Motor de Alertas integrado. \\
+        5. Despliegue y Cierre (Mes 5) & Despliegue de demo cloud (Vercel/Render), generación de manuales interactivos en Fumadocs (Usuario y Técnico), validación independiente de requerimientos con analistas ($N = 2$) e informe final. & Demo funcional en la nube, manuales interactivos Fumadocs (Usuario y Arquitectura) e Informe final. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}

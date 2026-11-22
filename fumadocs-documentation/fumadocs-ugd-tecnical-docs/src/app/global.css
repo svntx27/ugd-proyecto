@@ -1,0 +1,122 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html > body[data-scroll-locked] {
+  margin-right: 0px !important;
+  --removed-body-scroll-bar-size: 0px !important;
+}
+
+/* =========================================================================
+   Transiciones suaves de navegación y panel lateral (Sidebar & TOC)
+   ========================================================================= */
+
+/* Transición suave para todos los elementos interactivos del menú lateral */
+#nd-sidebar a,
+#nd-sidebar button,
+[data-sidebar] a,
+[data-sidebar] button,
+nav[aria-label="Sidebar"] a,
+nav[aria-label="Sidebar"] button {
+  transition: background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: background-color, color;
+}
+
+/* Anular hover:transition-none de Fumadocs para garantizar respuesta fluida al cursor */
+#nd-sidebar a:hover,
+#nd-sidebar button:hover,
+[data-sidebar] a:hover,
+[data-sidebar] button:hover,
+nav[aria-label="Sidebar"] a:hover,
+nav[aria-label="Sidebar"] button:hover {
+  transition: background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Transiciones suaves en el índice derecho (TOC - En esta página) */
+#nd-toc a,
+nav[aria-label="Table of contents"] a,
+[data-toc] a {
+  transition: color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Suavizado en el desplegable de selección de módulos (Root Popover) */
+[data-popover] a,
+[data-popover] button,
+.fd-scroll-container a {
+  transition: background-color 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* =========================================================================
+   Botonera Estética en el Pie del Panel Lateral (GitHub + Cambio de Tema)
+   ========================================================================= */
+
+/* Contenedor del pie del panel lateral */
+#nd-sidebar .p-4.pt-2 {
+  padding: 0.75rem 1rem 1rem 1rem;
+  border-top: 1px solid var(--color-fd-border);
+}
+
+/* Barra unificada de controles */
+#nd-sidebar .p-4.pt-2 > div.flex {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.5rem !important;
+}
+
+/* Botón de GitHub con presentación de botón elegante y definido */
+#nd-sidebar .p-4.pt-2 a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.4rem !important;
+  padding: 0.4rem 0.75rem !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid var(--color-fd-border) !important;
+  background-color: var(--color-fd-secondary) !important;
+  color: var(--color-fd-muted-foreground) !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#nd-sidebar .p-4.pt-2 a:hover {
+  background-color: var(--color-fd-accent) !important;
+  color: var(--color-fd-foreground) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Selector de Tema con apariencia de cápsula equilibrada */
+#nd-sidebar .p-4.pt-2 [data-theme-toggle] {
+  padding: 0.25rem 0.35rem !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid var(--color-fd-border) !important;
+  background-color: var(--color-fd-secondary) !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#nd-sidebar .p-4.pt-2 [data-theme-toggle]:hover {
+  background-color: var(--color-fd-accent) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}

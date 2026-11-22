@@ -1,0 +1,10 @@
+{
+  "title": "Documentación General",
+  "pages": [
+    "index",
+    "---Módulos del Sistema---",
+    "backend",
+    "frontend-admin",
+    "frontend-user"
+  ]
+}

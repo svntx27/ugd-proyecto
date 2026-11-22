@@ -1,0 +1,46 @@
+---
+title: Frontend Administrativo - Visión General
+description: Arquitectura, roadmap y especificaciones funcionales del panel de administración y control de la UGD.
+---
+
+El **Frontend Administrativo** es la aplicación web diseñada para el personal directivo, coordinadores y analistas de la **Unidad de Gestión de Doctorados (UGD)**. Centraliza el monitoreo de citas en ventanilla en tiempo real, la administración del padrón oficial de doctorandos y expedientes académicos, la calibración de horarios del sistema y la exportación de respaldos institucionales.
+
+---
+
+## Estado del Proyecto y Roles Autorizados
+
+<Callout type="info" title="Estado: En desarrollo / Estructura Planificada">
+  Este módulo documental define la arquitectura de vistas y el contrato de consumo de APIs que debe seguir el equipo frontend para integrarse con `express-backend-api`.
+</Callout>
+
+El acceso a esta interfaz está restringido exclusivamente a las cuentas con roles administrativos validados mediante `POST /api/auth/admin-login`:
+
+- <RoleBadge role="DIRECTOR" /> **Director:** Control total operativo, nómina y exportación de respaldos.
+- <RoleBadge role="ANALISTA_PROCESOS" /> **Analista de Procesos:** Gestión operativa de citas, revisión de nómina y expedientes.
+- <RoleBadge role="ANALISTA_TECNICO" /> **Analista Técnico:** Supervisión de ventanillas y diagnósticos de conectividad.
+- <RoleBadge role="DESARROLLADOR" /> **Desarrollador:** Administración técnica global y depuración.
+
+---
+
+## Módulos Documentales del Panel
+
+<Cards>
+  <Card
+    title="Arquitectura de Pantallas"
+    href="/docs/frontend-admin/pantallas"
+    description="Diseño de pantallas: Monitor de Citas en vivo, Padrón Estudiantil 360°, Ventanillas y Configuración."
+  />
+  <Card
+    title="Integración con la API"
+    href="/docs/frontend-admin/integracion-api"
+    description="Flujo de inicio de sesión administrativo, inyección de tokens JWT y consumo reactivo del stream SSE."
+  />
+</Cards>
+
+---
+
+## Principios de Diseño de la Interfaz
+
+1. **Monitoreo en Tiempo Real:** El personal de ventanilla debe ver reflejada cualquier nueva cita o cancelación al instante, sin necesidad de recargar la página (`F5`).
+2. **Consistencia con el Backend:** Todos los estados y nomenclaturas deben corresponder a los definidos en la base de datos PostgreSQL (`activa`, `cancelada`, `EN_ESTUDIOS`, `GRADUADO`, etc.).
+3. **Seguridad Reactiva:** Si la sesión caduca o el usuario es inhabilitado en la base de datos, la aplicación debe redirigir inmediatamente a la pantalla de login.

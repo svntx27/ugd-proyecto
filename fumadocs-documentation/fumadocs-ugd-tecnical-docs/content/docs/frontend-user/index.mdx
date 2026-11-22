@@ -1,0 +1,44 @@
+---
+title: Frontend de Usuarios - Visión General
+description: Portal web de autoservicio para doctorandos, agendamiento de citas y seguimiento de trámites académicos UGD.
+---
+
+El **Frontend de Usuarios** es la plataforma web de cara al público orientada a los estudiantes doctorandos, postulantes e investigadores de la **Universidad Central del Ecuador (UCE)**. Ofrece una experiencia moderna de autoservicio para la reserva de citas presenciales en la Unidad de Gestión de Doctorados y la consulta transparente del estado de sus trámites académicos y expedientes.
+
+---
+
+## Estado del Proyecto y Destinatarios
+
+<Callout type="info" title="Estado: Planificado / Especificación de Arquitectura">
+  Esta sección documenta la experiencia de usuario esperada y las pautas técnicas para que el equipo que construya la interfaz de usuario se acople limpiamente con `express-backend-api`.
+</Callout>
+
+El portal está destinado principalmente a:
+- <RoleBadge role="ESTUDIANTE" /> **Doctorandos en Estudios:** Estudiantes regulares con matrícula activa que requieren atención presencial para revisión de tesis, entrega de informes o firma de adendas.
+- <RoleBadge role="ESTUDIANTE" /> **Doctorandos en Devengamiento:** Graduados en proceso de compensación de beca mediante horas docentes o proyectos.
+- <RoleBadge role="PUBLICO" /> **Postulantes e Invitados:** Usuarios que buscan información general de convocatorias o desean verificar su pre-registro en nómina.
+
+---
+
+## Módulos Documentales del Portal
+
+<Cards>
+  <Card
+    title="Experiencia y Flujos de Usuario"
+    href="/docs/frontend-user/experiencia-usuario"
+    description="Flujo paso a paso de verificación y activación de cuenta, selector visual de turnos y panel 'Mis Citas'."
+  />
+  <Card
+    title="Integración con la API"
+    href="/docs/frontend-user/integracion-api"
+    description="Contrato de consumo de endpoints públicos y de estudiantes: disponibilidad de horarios, agendamiento y perfiles."
+  />
+</Cards>
+
+---
+
+## Principios de Diseño para la Experiencia del Usuario (UX)
+
+1. **Autonomía y Simplicidad:** El doctorando debe poder verificar su pertenencia a nómina y agendar su turno en menos de 2 minutos sin asistencia técnica.
+2. **Claridad en Horarios:** La interfaz debe mostrar inequívocamente qué bloques de 30 minutos están libres y cuáles ocupados, evitando solapamientos antes de enviar la petición.
+3. **Diseño Adaptativo (Mobile-First):** La mayoría de estudiantes consultan y reservan turnos desde dispositivos móviles, por lo que el calendario y la grilla horaria deben ser táctiles y responsivas.

@@ -1,0 +1,74 @@
+---
+title: Arquitectura de Pantallas
+description: Especificación de las vistas del panel administrativo, componentes visuales e interacción en tiempo real.
+---
+
+Este documento detalla la estructura de pantallas y módulos funcionales que conforman el **Frontend Administrativo** de la UGD.
+
+---
+
+## 1. Mapa de Navegación del Panel
+
+```text
+Panel Administrativo (Sidebar)
+├── Tablero General / Metricas (Dashboard)
+├── Monitor de Citas en Ventanilla (Tiempo Real SSE)
+├── Padron de Doctorandos y Usuarios (Ficha 360°)
+├── Gestion de Representantes / Ventanillas UGD
+└── Configuracion del Sistema y Respaldo de Base de Datos
+```
+
+---
+
+## 2. Especificación de Módulos y Pantallas
+
+### 2.1 Monitor de Citas en Ventanilla (Módulo en Tiempo Real)
+Es la pantalla de mayor actividad operativa diaria para los analistas de la UGD:
+
+- **Componentes de Interfaz:**
+  - Selector de fecha en calendario (con selector rápido "Hoy", "Mañana").
+  - Filtro por representante / módulo de atención presencial.
+  - Cuadrícula de turnos de 30 minutos (08:00 a 16:00) coloreada por estado:
+    - *Disponible* (indicador neutral/verde tenue)
+    - *Ocupado / Agendado* (con nombre del doctorando y motivo de cita)
+    - *Cancelado* (indicador atenuado)
+  - Indicador de estado de conexión al stream SSE en la esquina superior (*Conectado en vivo* / *Reconectando...*).
+- **Acciones Disponibles para el Analista:**
+  - Cancelar cita con modal de confirmación (`DELETE /api/appointments/admin/:id`).
+  - Reagendar turno a otra fecha, hora o analista (`PATCH /api/appointments/admin/:id/reschedule`).
+
+---
+
+### 2.2 Padrón de Doctorandos y Gestión de Usuarios
+Centraliza la nómina de estudiantes y las cuentas administrativas:
+
+- **Tabla de Integrantes:**
+  - Listado consolidado con paginación y búsqueda por cédula, nombres o correo `@uce.edu.ec`.
+  - Pestañas de filtrado: *Todos*, *Activos*, *Inactivos* y *Pre-registrados* (doctorandos sin cuenta creada con ID `doc_`).
+- **Botón de Acción "Registrar Estudiante":**
+  - Abre modal para registrar manualmente a un doctorando en nómina invocando `POST /api/users/estudiantes`.
+- **Ficha Integral 360° (Vista Detalle):**
+  - Muestra datos demográficos, facultad, carrera y carpeta física.
+  - Bloque de expedientes doctorales: título de tesis, programa doctoral, universidad de destino y país.
+  - Historial de adendas contractuales y estado de devengamiento.
+  - Historial de las últimas citas presenciales del estudiante.
+  - Botón para inhabilitar o reactivar la cuenta (`PUT /api/users/:id`).
+
+---
+
+### 2.3 Gestión de Representantes UGD
+Permite administrar los módulos de atención presencial:
+- Formulario de alta de representantes (`POST /api/representatives`): nombre, cargo (`title`), ubicación física y capacidad.
+- Conmutador de estado (*activo / inactivo*) para pausar la disponibilidad de una ventanilla sin perder su historial de citas.
+
+---
+
+### 2.4 Configuración del Sistema y Respaldos (Backups)
+Pantalla reservada para roles de alta dirección (<RoleBadge role="DIRECTOR" /> y <RoleBadge role="DESARROLLADOR" />):
+- **Formulario de Horarios Operativos:**
+  - Permite ajustar `start_hour` (ej: 08:00), `end_hour` (ej: 16:00) y `slot_interval` (30 min).
+  - Al guardar, realiza una actualización atómica mediante `POST /api/settings/bulk`.
+- **Área de Descarga de Respaldo:**
+  - Muestra la fecha del último respaldo generado.
+  - Botón *"Exportar Base de Datos Completa (JSON)"*.
+  - Despliega un diálogo de seguridad solicitando reingresar la contraseña del administrador para autorizar la descarga mediante `POST /api/settings/backup`.
