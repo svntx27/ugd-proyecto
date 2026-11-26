@@ -91,3 +91,48 @@ body {
   min-height: 100vh;
   background-color: var(--color-surface-subtle);
 }
+
+
+/* ==========================================================================
+   TRANSICIONES ESTÉTICAS Y SUTILES (FADE IN / FADE OUT)
+   Diseñado para rendimiento óptimo (GPU-accelerated, cero layout shift)
+   ========================================================================== */
+@keyframes authFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes authFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+::view-transition-old(auth-form-content),
+::view-transition-old(auth-lateral-content) {
+  animation: 140ms cubic-bezier(0.4, 0, 1, 1) both authFadeOut;
+}
+
+::view-transition-new(auth-form-content),
+::view-transition-new(auth-lateral-content) {
+  animation: 200ms cubic-bezier(0, 0, 0.2, 1) both authFadeIn;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

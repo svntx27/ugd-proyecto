@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Eye, EyeOff, Lock, Mail, ArrowRight, Loader2, ShieldCheck, AlertTriangle } from "lucide-react";
+import { useState } from "react";
+import { Eye, EyeOff, Lock, Mail, ArrowRight, Loader2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,16 +12,12 @@ export default function LoginForm() {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [isMaintenance, setIsMaintenance] = useState(false);
-
-    useEffect(() => {
+    const [isMaintenance, setIsMaintenance] = useState(() => {
         if (typeof window !== "undefined") {
-            const params = new URLSearchParams(window.location.search);
-            if (params.get("maintenance") === "true") {
-                setIsMaintenance(true);
-            }
+            return new URLSearchParams(window.location.search).get("maintenance") === "true";
         }
-    }, []);
+        return false;
+    });
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -68,7 +64,7 @@ export default function LoginForm() {
                 <Mail className="absolute left-3.5 text-muted-foreground w-5 h-5 pointer-events-none" />
                 <Input
                     type="email"
-                    placeholder="Correo Institucional / Admin"
+                    placeholder="correo@uce.edu.ec"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-11 h-12 bg-card border-border text-foreground placeholder:text-muted-subtle focus:border-primary-focus focus:ring-4 focus:ring-primary/15 rounded-xl transition-all shadow-2xs"
@@ -81,7 +77,7 @@ export default function LoginForm() {
                 <Lock className="absolute left-3.5 text-muted-foreground w-5 h-5 pointer-events-none" />
                 <Input
                     type={showPassword ? "text" : "password"}
-                    placeholder="Contraseña"
+                    placeholder="Contraseña institucional"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-11 pr-11 h-12 bg-card border-border text-foreground placeholder:text-muted-subtle focus:border-primary-focus focus:ring-4 focus:ring-primary/15 rounded-xl transition-all shadow-2xs"
@@ -100,7 +96,7 @@ export default function LoginForm() {
 
             <Button
                 type="submit"
-                className="w-full h-12 rounded-xl text-sm font-semibold tracking-wide bg-primary hover:bg-primary-hover text-primary-foreground transition-all shadow-xs hover:shadow active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full h-12 rounded-xl text-sm font-semibold tracking-wide bg-primary hover:bg-primary-hover text-primary-foreground transition-all shadow-xs hover:shadow active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-2"
                 disabled={isLoading}
             >
                 {isLoading ? (
@@ -110,16 +106,11 @@ export default function LoginForm() {
                     </>
                 ) : (
                     <>
-                        <span>Iniciar Sesión</span>
+                        <span>Ingresar a la Plataforma</span>
                         <ArrowRight className="w-4 h-4 text-border-strong" />
                     </>
                 )}
             </Button>
-
-            <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground pt-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-primary-focus" />
-                <span>Acceso administrativo cifrado</span>
-            </div>
         </form>
     );
 }

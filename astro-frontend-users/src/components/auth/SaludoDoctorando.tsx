@@ -17,10 +17,11 @@ export const SaludoDoctorando: React.FC = () => {
 
     return (
         <div className="space-y-8">
-            <div className="space-y-4">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gold-border">
-                    <CheckCircle2 className="h-3.5 w-3.5" /> Padrón UGD verificado
-                </span>
+            <div className="space-y-3">
+                <div className="flex items-center gap-2 text-xs font-medium tracking-wide text-gold-light/90">
+                    <CheckCircle2 className="h-4 w-4 text-gold" />
+                    <span>Padrón oficial verificado</span>
+                </div>
                 <h1 className="font-serif text-4xl font-medium leading-tight tracking-tight sm:text-5xl">¡Hola, {nombre}!</h1>
             </div>
 

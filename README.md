@@ -1,20 +1,26 @@
 # Proyecto Integrador
 
-Repositorio privado para organizar el trabajo de un monorepo con estas areas:
+Repositorio monorepo para el sistema de gestión de doctorandos de la Unidad de Gestión de Doctorados (UGD).
 
-- documentacion en LaTeX
-- backend del proyecto
-- primer frontend
-- segundo frontend
+## Accesos Rápidos (Despliegues en Producción)
 
-## Estructura prevista
+Enlaces de acceso rápido para desarrolladores y equipo de trabajo:
+
+- **Panel Administrativo:** [https://admin-ugd.vercel.app](https://admin-ugd.vercel.app)
+- **Panel de usuarios:** [https://ugd-usuarios.vercel.app](https://ugd-usuarios.vercel.app)
+- **Documentacion Tecnica:** [https://ugd-doc-tecnica.vercel.app](https://ugd-doc-tecnica.vercel.app)
+
+---
+
+## Estructura del Proyecto
 
 ```text
 /
-├─ Plan-Proyecto-Integrador/   # documentacion principal en LaTeX
-├─ server/                     # backend
-├─ frontend-1/                 # primer frontend
-└─ frontend-2/                 # segundo frontend
+├─ Plan-Proyecto-Integrador/   # Documentación principal en LaTeX
+├─ express-backend-api/        # API REST Backend (Express, Prisma, PostgreSQL)
+├─ next-frontend-admin/        # Panel Administrativo (Next.js)
+├─ astro-frontend-users/       # Portal del Estudiante Doctoral (Astro SSR)
+└─ fumadocs-documentation/     # Portal de Documentación Técnica (Fumadocs)
 ```
 
 > La carpeta `Plan-Proyecto-Integrador/` contiene el material que normalmente se usara como base documental del proyecto.

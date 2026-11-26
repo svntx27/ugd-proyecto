@@ -4,66 +4,80 @@ import LoginForm from "./LoginForm";
 
 export default function LoginPage() {
     return (
-        <div className="flex min-h-screen w-full bg-background text-foreground">
+        <div className="flex h-screen w-full overflow-hidden bg-background text-foreground">
             {/* Left Column: Form & Institutional Identity */}
-            <div className="flex w-full flex-col justify-center px-6 py-12 md:w-1/2 lg:px-16 xl:px-24">
-                <div className="mx-auto w-full max-w-sm flex flex-col items-center">
-                    {/* Emblem & Institutional Header */}
-                    <div className="w-12 h-12 rounded-2xl bg-primary-deep flex items-center justify-center text-white shadow-xs mb-4">
-                        <GraduationCap className="w-6 h-6 text-accent" />
+            <div className="flex w-full flex-col justify-between overflow-y-auto px-6 py-8 md:w-1/2 md:px-12 lg:px-16 xl:px-24">
+                {/* Institutional Header */}
+                <header className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-xs shrink-0">
+                        <GraduationCap className="w-5 h-5 text-gold" strokeWidth={2.2} />
                     </div>
+                    <div className="flex flex-col">
+                        <span className="text-xs font-bold tracking-tight text-foreground uppercase">
+                            Universidad Central del Ecuador
+                        </span>
+                        <span className="text-[11px] text-muted-foreground font-medium">
+                            Unidad de Gestión de Doctorados (UGD)
+                        </span>
+                    </div>
+                </header>
 
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-accent-text bg-accent/15 px-3 py-1 rounded-full border border-accent/30 mb-3">
-                        Portal UGD • UCE
-                    </span>
-
-                    <div className="text-center mb-7">
-                        <h1 className="text-3xl font-bold font-serif text-foreground tracking-tight mb-2">
-                            Bienvenido
+                {/* Main Form Center */}
+                <main className="my-auto py-8 w-full max-w-sm mx-auto">
+                    <div className="mb-7 text-center">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight mb-1.5">
+                            Iniciar Sesión
                         </h1>
-                        <p className="text-sm text-foreground-muted leading-relaxed">
-                            Acceso exclusivo para administradores y autoridades
+                        <p className="text-sm text-foreground-muted">
+                            Ingrese sus credenciales para continuar
                         </p>
                     </div>
 
                     <LoginForm />
+                </main>
 
-                    <p className="mt-8 text-center text-xs text-muted-subtle">
-                        Sistema de Reservas UCE &copy; 2026
-                    </p>
-                </div>
+                {/* Footer Note */}
+                <footer className="pt-4 border-t border-border/60 text-xs text-muted-subtle flex items-center justify-between">
+                    <span>UGD · Gestión Institucional</span>
+                    <span>&copy; {new Date().getFullYear()} UCE</span>
+                </footer>
             </div>
 
-            {/* Right Column: Editorial Visual Cover */}
-            <div className="relative hidden w-1/2 md:block overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-tr from-primary-darkest/95 via-primary-deep-hover/85 to-primary-hero-end/75 z-10" />
+            {/* Right Column: Editorial Visual Cover (Solid Base to avoid white borders) */}
+            <div className="relative hidden w-1/2 md:flex flex-col justify-between p-12 lg:p-16 xl:p-20 overflow-hidden bg-primary-darkest text-white">
                 <Image
-                    src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=2000"
-                    alt="Espacio institucional de investigación"
+                    src="/bg.webp"
+                    alt="Campus e investigación - Universidad Central del Ecuador"
                     fill
-                    sizes="50vw"
-                    className="object-cover"
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    className="object-cover object-center"
                     priority
                 />
-                <div className="absolute inset-0 z-20 flex flex-col justify-center p-12 lg:p-24 text-white">
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium tracking-wide text-accent bg-white/10 backdrop-blur-md border border-white/15 w-fit mb-6">
-                        <span className="w-2 h-2 rounded-full bg-primary-glow" />
-                        <span>Unidad de Gestión de Doctorados</span>
-                    </div>
 
-                    <h2 className="text-4xl lg:text-5xl font-serif font-bold leading-tight mb-4 text-background">
-                        Tu potencial es <br />
-                        <span className="text-border-strong italic font-serif">infinito.</span>
+                {/* Deep Institutional Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-darkest/95 via-primary-deep/85 to-primary-darkest/60 z-10" />
+
+                {/* Top Badge: Research & Postgrad */}
+                <div className="relative z-20 flex items-center gap-2.5 text-xs font-medium tracking-wide text-gold-light/90">
+                    <span className="w-2 h-2 rounded-full bg-gold" />
+                    <span>Vicerrectorado de Investigación, Doctorados e Innovación</span>
+                </div>
+
+                {/* Editorial Content */}
+                <div className="relative z-20 max-w-lg my-auto py-8">
+                    <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold leading-[1.15] text-white tracking-tight mb-5">
+                        Gestión Integral del Posgrado y Doctorados
                     </h2>
 
-                    <p className="max-w-md text-base lg:text-lg text-border leading-relaxed">
-                        Gestiona las citas presenciales y supervisa la atención personalizada de la Unidad de Gestión de Doctorados (UGD).
+                    <p className="text-base lg:text-lg text-white/80 leading-relaxed font-light">
+                        Supervisión integral de programas doctorales, expedientes de investigadores, comités de evaluación y seguimiento institucional.
                     </p>
+                </div>
 
-                    <div className="mt-12 pt-6 border-t border-white/15 max-w-md flex items-center justify-between text-xs text-border-strong">
-                        <span>Universidad Central del Ecuador</span>
-                        <span>Gestión Institucional</span>
-                    </div>
+                {/* Cover Bottom Meta */}
+                <div className="relative z-20 pt-6 border-t border-white/15 flex items-center justify-between text-xs text-white/70">
+                    <span>Universidad Central del Ecuador</span>
+                    <span className="font-medium text-gold-light">Quito, Ecuador</span>
                 </div>
             </div>
         </div>

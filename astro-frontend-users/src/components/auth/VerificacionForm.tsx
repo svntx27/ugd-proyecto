@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { ArrowRight, CreditCard, Mail } from 'lucide-react';
 import api from '../../lib/api';
 import { toast } from '../../lib/toast';
+import { navigate } from 'astro:transitions/client';
 import { useAuthGuard } from '../../hooks/useAuthGuard';
 import { guardarActivacion } from '../../lib/activacion';
 import type { VerifyDoctorandoResponse } from '../../types';
@@ -27,7 +28,7 @@ export const VerificacionForm: React.FC = () => {
             const { data } = await api.post<VerifyDoctorandoResponse>('/api/auth/verificar-doctorando', datos);
             if (data.valid && data.doctorando) {
                 guardarActivacion({ ...datos, doctorando: data.doctorando });
-                window.location.assign('/activar/contrasena');
+                navigate('/activar/contrasena');
                 return;
             }
             toast.error('Doctorando no registrado', { description: 'Tus datos no constan en el padrón oficial de la UGD.' });

@@ -7,50 +7,104 @@
  *  - default: contenido del formulario (columna clara).
  *  - lateral: reemplaza el texto del panel institucional (por ejemplo, el saludo del paso 2).
  */
+import { GraduationCap } from 'lucide-react';
 import Layout from './Layout.astro';
 
 interface Props {
   title: string;
   heading?: string;
   subheading?: string;
+  badge?: string;
   imageSrc?: string;
   reverse?: boolean;
 }
-const { title, heading = '', subheading = '', imageSrc, reverse = false } = Astro.props;
+
+const {
+  title,
+  heading = 'Portal del Estudiante Doctoral',
+  subheading = 'Seguimiento integral de tu formación académica, avances de investigación y trámites con la Unidad de Gestión de Doctorados.',
+  badge = 'Vicerrectorado de Investigación, Doctorados e Innovación',
+  imageSrc = '/bg.jpg',
+  reverse = false,
+} = Astro.props;
+
 const tieneLateral = Astro.slots.has('lateral');
 ---
 <Layout title={`${title} | Portal Doctoral UGD`} showNavbar={false}>
   <div class:list={['flex min-h-screen w-full bg-surface', reverse && 'flex-row-reverse']}>
-    <aside class="hidden lg:flex lg:w-1/2 relative bg-primary items-center justify-center overflow-hidden">
-      {
-        imageSrc && !tieneLateral && (
-          <div class="absolute inset-0">
-            <img src={imageSrc} alt="" class="h-full w-full object-cover opacity-80" loading="eager" decoding="async" />
-            <div class="absolute inset-0 bg-primary/70" />
-          </div>
-        )
-      }
-      <div class="relative z-10 w-full max-w-lg p-12 text-white">
+    
+    <!-- Columna del Formulario e Identidad Institucional -->
+    <section class="flex w-full flex-col justify-between px-6 py-8 sm:px-10 md:px-12 lg:w-1/2 lg:px-16 xl:px-20 overflow-y-auto">
+      <!-- Encabezado Institucional Superior (persistente) -->
+      <header class="flex items-center gap-3" transition:name="auth-header">
+        <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-xs shrink-0">
+          <GraduationCap className="w-5 h-5 text-gold" strokeWidth={2.2} />
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xs font-bold tracking-tight text-text-main uppercase">
+            Universidad Central del Ecuador
+          </span>
+          <span class="text-[11px] text-muted font-medium">
+            Unidad de Gestión de Doctorados (UGD)
+          </span>
+        </div>
+      </header>
+
+      <!-- Centro: Contenedor del Formulario con Fade In/Out sutil -->
+      <main class="my-auto py-8 w-full max-w-sm mx-auto" transition:name="auth-form-content">
+        <slot />
+      </main>
+
+      <!-- Pie de página ordenado y anclado al fondo (persistente) -->
+      <footer class="pt-4 border-t border-border-subtle text-xs text-muted flex items-center justify-between" transition:name="auth-footer">
+        <span>UGD · Portal del Estudiante Doctoral</span>
+        <span>&copy; {new Date().getFullYear()} UCE</span>
+      </footer>
+    </section>
+
+    <!-- Columna Visual Editorial (Fondo persistente bg.jpg con degradado institucional) -->
+    <aside class="relative hidden w-1/2 lg:flex flex-col justify-between p-12 lg:p-16 xl:p-20 overflow-hidden bg-primary text-white" transition:name="auth-visual-cover">
+      <img
+        src={imageSrc}
+        alt="Campus e investigación - Universidad Central del Ecuador"
+        class="absolute inset-0 h-full w-full object-cover object-center"
+        loading="eager"
+        decoding="async"
+      />
+
+      <!-- Capa de degradado institucional profundo -->
+      <div class="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/80 to-primary/60 z-10" />
+
+      <!-- Badge Superior -->
+      <div class="relative z-20 flex items-center gap-2.5 text-xs font-medium tracking-wide text-gold-light/90">
+        <span class="w-2 h-2 rounded-full bg-gold"></span>
+        <span>{badge}</span>
+      </div>
+
+      <!-- Contenido Editorial o Slot Lateral con Fade sutil -->
+      <div class="relative z-20 max-w-lg my-auto py-8" transition:name="auth-lateral-content">
         {
           tieneLateral ? (
             <slot name="lateral" />
           ) : (
             <>
-              <h1 class="font-serif text-5xl font-medium leading-tight tracking-tight">{heading}</h1>
-              <p class="mt-6 text-xl font-light leading-relaxed text-white/85">{subheading}</p>
+              <h2 class="font-serif text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight text-white tracking-tight mb-5">
+                {heading}
+              </h2>
+              <p class="text-base lg:text-lg text-white/85 leading-relaxed font-light">
+                {subheading}
+              </p>
             </>
           )
         }
       </div>
+
+      <!-- Pie de página del panel visual -->
+      <div class="relative z-20 pt-6 border-t border-white/15 flex items-center justify-between text-xs text-white/70">
+        <span>Universidad Central del Ecuador</span>
+        <span class="font-medium text-gold-light">Quito, Ecuador</span>
+      </div>
     </aside>
 
-    <section class="flex flex-1 flex-col items-center justify-center p-8 lg:p-12">
-      <div class="w-full max-w-md">
-        <slot />
-        <p class="mt-8 border-t border-border-subtle pt-8 text-center text-xs text-muted">
-          Unidad de Gestión de Doctorados (UGD) • Universidad Central del Ecuador © {new Date().getFullYear()}
-        </p>
-      </div>
-    </section>
   </div>
 </Layout>
